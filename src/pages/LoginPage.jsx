@@ -35,16 +35,15 @@ export default function LoginPage() {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+<video
+  src="/mydemo.mp4"
+  autoPlay
+  loop
+  muted
+  playsInline
+  className="absolute inset-0 w-full h-full object-cover z-0"
+/>
 
-      {/* Background Video */}
-      <video
-        src="/mydemo.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover object-center md:object-cover z-0"
-      />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] z-0" />
