@@ -1,5 +1,4 @@
 import React from 'react';
-import { TrendingUp, Package, Users, Leaf } from 'lucide-react';
 import { useRealTimeStats } from '../hooks/useRealTimeData';
 
 const LiveStats = () => {
@@ -9,7 +8,6 @@ const LiveStats = () => {
     {
       title: 'Total Donations',
       value: stats.totalDonations,
-      icon: Package,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
       change: '+12%',
@@ -18,7 +16,6 @@ const LiveStats = () => {
     {
       title: 'Food Saved (kg)',
       value: stats.totalFoodSaved,
-      icon: Leaf,
       color: 'text-green-600',
       bgColor: 'bg-green-100',
       change: '+8%',
@@ -27,7 +24,6 @@ const LiveStats = () => {
     {
       title: 'Active Donors',
       value: stats.activeDonors,
-      icon: Users,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       change: '+15%',
@@ -36,7 +32,6 @@ const LiveStats = () => {
     {
       title: 'CO₂ Saved (kg)',
       value: stats.co2Saved,
-      icon: TrendingUp,
       color: 'text-orange-600',
       bgColor: 'bg-orange-100',
       change: '+8%',
@@ -78,7 +73,6 @@ const LiveStats = () => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       {statItems.map((stat, index) => {
-        const Icon = stat.icon;
         const progressPercentage = Math.min(100, (stat.value / 1000) * 100);
 
         return (
@@ -88,7 +82,9 @@ const LiveStats = () => {
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 truncate">{stat.title}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 truncate">
+                  {stat.title}
+                </p>
 
                 <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
                   <p className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
@@ -100,18 +96,19 @@ const LiveStats = () => {
                 </div>
               </div>
 
+              {/* Icon removed – replaced with empty placeholder for layout balance */}
               <div
-                className={`p-2 sm:p-3 rounded-lg ${stat.bgColor} ml-2 sm:ml-3 group-hover:scale-110 transition-transform duration-200`}
-              >
-                <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${stat.color}`} />
-              </div>
+                className={`p-2 sm:p-3 rounded-lg ${stat.bgColor} ml-2 sm:ml-3 opacity-0`}
+              ></div>
             </div>
 
             {/* Progress bar */}
             <div className="mt-3 sm:mt-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-gray-500">Progress</span>
-                <span className="text-xs text-gray-500">{Math.round(progressPercentage)}%</span>
+                <span className="text-xs text-gray-500">
+                  {Math.round(progressPercentage)}%
+                </span>
               </div>
 
               <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">

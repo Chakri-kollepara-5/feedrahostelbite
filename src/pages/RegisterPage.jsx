@@ -80,15 +80,15 @@ export default function RegisterPage() {
         });
 
         if (emailSent) {
-          toast.success('Account created! Welcome email sent 📧');
+          toast.success('Account created! Welcome email sent ');
         } else {
           toast.success('Account created!');
-          toast('Welcome email failed to send. Check console.', { icon: '⚠️' });
+          toast('Welcome email failed to send. Check console.' );
         }
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
         toast.success('Account created!');
-        toast('Welcome email failed to send.', { icon: '⚠️' });
+        toast('Welcome email failed to send.');
       }
 
       navigate('/dashboard');
@@ -130,10 +130,10 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-4 rounded-2xl shadow-lg">
-              <div className="text-3xl">🌾</div>
+              <div className="text-3xl"></div>
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Join Feedra Family! 🤗</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Join Feedra Family! </h1>
           <p className="text-gray-600">Help reduce food waste in India</p>
         </div>
 
@@ -319,7 +319,7 @@ export default function RegisterPage() {
         {/* Verification */}
         <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
           <div className="flex items-center justify-center space-x-2">
-            <span className="text-lg">🏛️</span>
+            <span className="text-lg"></span>
             <div className="text-center">
               <div className="text-xs font-semibold text-green-900">
                 Verified by Government of India
@@ -328,7 +328,7 @@ export default function RegisterPage() {
                 Udyam No: UDYAM-AP-10-0116772
               </div>
             </div>
-            <span className="text-lg">✅</span>
+            <span className="text-lg"></span>
           </div>
         </div>
       </div>

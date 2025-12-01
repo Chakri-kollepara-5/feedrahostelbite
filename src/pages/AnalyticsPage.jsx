@@ -13,7 +13,6 @@ import {
   LineChart,
   Line
 } from 'recharts';
-import { TrendingUp, Users, Package, Leaf, Award, Target } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getDonations } from '../services/donationService';
 
@@ -39,11 +38,8 @@ const AnalyticsPage = () => {
     loadDonations();
   }, []);
 
-  // --------------------------
-  // Calculate Analytics
-  // --------------------------
+  // Analytics
   const totalDonations = donations.length;
-
   const totalFoodSaved = donations.reduce(
     (sum, donation) => sum + (donation.quantity || 0),
     0
@@ -52,9 +48,7 @@ const AnalyticsPage = () => {
   const co2Saved = Math.round(totalFoodSaved * 2.3);
   const waterSaved = Math.round(totalFoodSaved * 150);
 
-  // --------------------------
   // Dummy Monthly Data
-  // --------------------------
   const monthlyData = [
     { month: 'Jan', donations: 45, foodSaved: 320 },
     { month: 'Feb', donations: 52, foodSaved: 380 },
@@ -64,25 +58,13 @@ const AnalyticsPage = () => {
     { month: 'Jun', donations: 74, foodSaved: 580 },
   ];
 
-  // --------------------------
   // Food Type Distribution
-  // --------------------------
   const foodTypeData = [
     { name: 'Vegetables', value: 35, color: '#10B981' },
     { name: 'Fruits', value: 25, color: '#059669' },
     { name: 'Grains', value: 20, color: '#34D399' },
     { name: 'Dairy', value: 15, color: '#6EE7B7' },
     { name: 'Others', value: 5, color: '#A7F3D0' },
-  ];
-
-  // --------------------------
-  // Impact Metrics
-  // --------------------------
-  const impactData = [
-    { metric: 'Meals Provided', value: Math.round(totalFoodSaved * 3), icon: Package, color: 'text-blue-600' },
-    { metric: 'Families Helped', value: Math.round(totalFoodSaved / 5), icon: Users, color: 'text-purple-600' },
-    { metric: 'CO₂ Saved (kg)', value: co2Saved, icon: Leaf, color: 'text-green-600' },
-    { metric: 'Water Saved (L)', value: waterSaved, icon: Target, color: 'text-cyan-600' },
   ];
 
   if (loading) {
@@ -105,20 +87,19 @@ const AnalyticsPage = () => {
 
         {/* Impact Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {impactData.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{item.metric}</p>
-                    <p className="text-2xl font-bold text-gray-900">{item.value.toLocaleString()}</p>
-                  </div>
-                  <Icon className={`h-8 w-8 ${item.color}`} />
-                </div>
+          {[
+            { metric: 'Meals Provided', value: Math.round(totalFoodSaved * 3) },
+            { metric: 'Families Helped', value: Math.round(totalFoodSaved / 5) },
+            { metric: 'CO₂ Saved (kg)', value: co2Saved },
+            { metric: 'Water Saved (L)', value: waterSaved },
+          ].map((item, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{item.metric}</p>
+                <p className="text-2xl font-bold text-gray-900">{item.value.toLocaleString()}</p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* Charts */}
@@ -226,7 +207,7 @@ const AnalyticsPage = () => {
           </div>
         </div>
 
-        {/* Achievement Badges */}
+        {/* Achievements (Icons removed) */}
         <div className="mt-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Achievements</h3>
 
@@ -243,11 +224,6 @@ const AnalyticsPage = () => {
                   achievement.earned ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'
                 }`}
               >
-                <Award
-                  className={`h-8 w-8 mb-2 ${
-                    achievement.earned ? 'text-green-600' : 'text-gray-400'
-                  }`}
-                />
                 <h4
                   className={`font-semibold ${
                     achievement.earned ? 'text-green-900' : 'text-gray-500'

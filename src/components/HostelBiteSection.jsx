@@ -66,7 +66,7 @@ const HostelBiteSection = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm hover:bg-white/30 transition-colors">
-                  <div className="text-2xl">🏠</div>
+                  <div className="text-2xl"></div>
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">HostelBite Integration</h3>
@@ -108,7 +108,7 @@ const HostelBiteSection = () => {
                     <div className="flex items-center space-x-1">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                        Available 🌟
+                        Available 
                       </span>
                     </div>
                   ) : (
@@ -135,10 +135,10 @@ const HostelBiteSection = () => {
           {/* Features */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {[
-              { icon: '⚡', title: 'Instant Booking', desc: 'Book in seconds' },
-              { icon: '🥗', title: 'Fresh Meals', desc: 'Daily prepared' },
-              { icon: '💰', title: 'Affordable', desc: 'Student prices' },
-              { icon: '📱', title: 'Easy Access', desc: 'Mobile friendly' }
+              {  title: 'Instant Booking', desc: 'Book in seconds' },
+              {  title: 'Fresh Meals', desc: 'Daily prepared' },
+              { title: 'Affordable', desc: 'Student prices' },
+              { title: 'Easy Access', desc: 'Mobile friendly' }
             ].map((f, i) => (
               <div
                 key={i}
@@ -158,7 +158,7 @@ const HostelBiteSection = () => {
               className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 group transform hover:scale-105"
             >
               <Utensils className="h-5 w-5 group-hover:scale-110 transition-transform" />
-              <span>Book Meals Instantly 🍽️</span>
+              <span>Book Meals Instantly </span>
             </button>
 
             <button
@@ -166,7 +166,7 @@ const HostelBiteSection = () => {
               className="flex-1 sm:flex-none bg-white text-green-600 border-2 border-green-200 px-6 py-4 rounded-xl font-semibold hover:bg-green-50 hover:border-green-300 transition-all duration-200 flex items-center justify-center space-x-2 hover:scale-105 transform"
             >
               <Star className="h-5 w-5" />
-              <span>View Menu 📋</span>
+              <span>View Menu </span>
             </button>
           </div>
 

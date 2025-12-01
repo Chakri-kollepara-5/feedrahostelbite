@@ -1,8 +1,7 @@
 import React from 'react';
 import { MapPin, Clock, Package, User, AlertTriangle, Zap } from 'lucide-react';
 
-// Removed TypeScript import: "Donation" type
-// import { Donation } from '../types/donation';
+
 
 const DonationCard = ({ donation, onClaim, canClaim }) => {
   const getStatusColor = (status) => {
@@ -23,19 +22,19 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
     }
   };
 
-  const getFoodEmoji = (foodType) => {
-    const type = foodType.toLowerCase();
-    if (type.includes('vegetable')) return '🥬';
-    if (type.includes('fruit')) return '🍎';
-    if (type.includes('grain') || type.includes('rice') || type.includes('wheat')) return '🌾';
-    if (type.includes('dairy') || type.includes('milk') || type.includes('cheese')) return '🥛';
-    if (type.includes('prepared') || type.includes('meal')) return '🍽️';
-    if (type.includes('baked') || type.includes('bread')) return '🍞';
-    if (type.includes('canned')) return '🥫';
-    if (type.includes('beverage') || type.includes('drink')) return '🥤';
-    if (type.includes('snack')) return '🍿';
-    return '🍽️';
-  };
+ const getFoodEmoji = (foodType) => {
+  const type = foodType.toLowerCase();
+  if (type.includes('vegetable')) return '';
+  if (type.includes('fruit')) return '';
+  if (type.includes('grain') || type.includes('rice') || type.includes('wheat')) return '';
+  if (type.includes('dairy') || type.includes('milk') || type.includes('cheese')) return '';
+  if (type.includes('prepared') || type.includes('meal')) return '';
+  if (type.includes('baked') || type.includes('bread')) return '';
+  if (type.includes('canned')) return '';
+  if (type.includes('beverage') || type.includes('drink')) return '';
+  if (type.includes('snack')) return '';
+  return '';
+};
 
   const parseDate = (dateInput) => {
     if (!dateInput) return new Date();
@@ -186,7 +185,6 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
               className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md group-hover:shadow-lg flex items-center space-x-1"
             >
               <span>Claim Food</span>
-              <span>🤝</span>
             </button>
           )}
 
@@ -194,7 +192,7 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
               <span className="text-xs text-yellow-600 font-medium">
-                Claimed for pickup 📦
+                Claimed for pickup 
               </span>
             </div>
           )}

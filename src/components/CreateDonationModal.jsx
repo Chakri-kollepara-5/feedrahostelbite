@@ -104,11 +104,11 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
           quantity: parseFloat(formData.quantity),
           location: formData.location
         });
-        toast.success('Donation created and notification sent! 🌟📧');
+        toast.success('Donation created and notification sent!' );
       } catch (emailError) {
         console.error('Email notification failed:', emailError);
-        toast.success('Donation created successfully! 🌟');
-        toast('Email notification failed to send', { icon: '⚠️' });
+        toast.success('Donation created successfully! ');
+        toast('Email notification failed to send');
       }
 
       onSuccess();
@@ -132,7 +132,7 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
         
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <div className="text-2xl">🍽️</div>
+            <div className="text-2xl"></div>
             <h2 className="text-2xl font-bold text-gray-900">Create Food Donation</h2>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
