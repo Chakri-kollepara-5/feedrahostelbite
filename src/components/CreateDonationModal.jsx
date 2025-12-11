@@ -311,13 +311,13 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
               Cancel
             </button>
             <button
-              type="submit"
-              disabled={loading}
-             
-            >
-              {loading ? 'Creating...' : 'Create Donation'}className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-lg cursor-default"
+  type="submit"
+  disabled={loading}
+  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-lg cursor-default"
+>
+  {loading ? 'Creating...' : 'Create Donation'}
+</button>
 
-            </button>
           </div>
 
         </form>
