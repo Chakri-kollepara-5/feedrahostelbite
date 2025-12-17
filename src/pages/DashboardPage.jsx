@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Plus, MapPin, Users, AlertCircle, Zap, RefreshCw } from "lucide-react";
+import "../components/impactAnimation.css";
+
+
 
 import { useAuth } from "../context/AuthContext";
 import { useRealTimeDonations } from "../hooks/useRealTimeData";
@@ -11,7 +14,7 @@ import CreateDonationModal from "../components/CreateDonationModal";
 import HostelBiteSection from "../components/HostelBiteSection";
 import DonationPaymentSection from "../components/DonationPaymentSection";
 import HostelMealBooking from "../components/HostelMealBooking";
-import FoodWastagePrediction from "../components/FoodWastagePrediction";
+import FoodWastageAIStatus from "../components/FoodWastageAIStatus";
 
 import toast from "react-hot-toast";
 
@@ -107,7 +110,8 @@ const DashboardPage = () => {
 
   {/* Overlay */}
   <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center px-6">
-    <h1 className="text-white text-3xl sm:text-4xl font-extrabold drop-shadow-lg">
+    <h1 className="text-white text-3xl sm:text-4xl font-extrabold drop-shadow-lg animate-fade-in-up">
+
       Together We Save Food. Together We Save Lives.
     </h1>
     <p className="text-white/90 mt-2 text-lg max-w-2xl">
@@ -180,7 +184,7 @@ const DashboardPage = () => {
               </button>
 
               {/* Find Donations */}
-              <button className="flex items-center p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <button className="flex items-center p-4 bg-green-50 border border-green-200 rounded-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
                 <div className="bg-blue-500 p-2 rounded-lg text-white mr-3">
                   <MapPin className="h-6 w-6" />
                 </div>
@@ -210,10 +214,10 @@ const DashboardPage = () => {
             <HostelBiteSection />
           </div>
 
-          {/* AI Prediction */}
-          <div className="mb-8">
-            <FoodWastagePrediction />
-          </div>
+         {/* AI Status Section */}
+<div className="mb-10">
+  <FoodWastageAIStatus />
+</div>
 
           {/* Hostel Booking */}
           <div className="mb-8">
@@ -288,31 +292,37 @@ const DashboardPage = () => {
               </div>
             )}
           </div>
-
-          {/* Impact Section */}
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-8 text-white">
-            <h2 className="text-2xl font-bold mb-6">Your Real-Time Impact</h2>
+ {/* 🔥 IMPACT SECTION WITH ANIMATION */}
+          <div className="mt-14 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-8 text-white">
+            <h2 className="text-2xl font-bold mb-8">
+              Your Real-Time Impact
+            </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="text-center bg-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold mb-2">{totalKg} kg</div>
-                <div>Food Donated</div>
+              <div className="impact-card">
+                <div className="impact-value">{totalKg} kg</div>
+                <div className="impact-label">Food Donated</div>
               </div>
 
-              <div className="text-center bg-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold mb-2">{Math.round(totalKg * 3)}</div>
-                <div>Meals Provided</div>
+              <div className="impact-card">
+                <div className="impact-value">
+                  {Math.round(totalKg * 3)}
+                </div>
+                <div className="impact-label">Meals Provided</div>
               </div>
 
-              <div className="text-center bg-white/10 rounded-xl p-4">
-                <div className="text-3xl font-bold mb-2">{Math.round(totalKg * 2.3)} kg</div>
-                <div>CO₂ Saved</div>
+              <div className="impact-card">
+                <div className="impact-value">
+                  {Math.round(totalKg * 2.3)} kg
+                </div>
+                <div className="impact-label">CO₂ Saved</div>
               </div>
             </div>
           </div>
 
         </div>
       </div>
+
 
       {/* Modal */}
       {showCreateModal && (

@@ -1,0 +1,30 @@
+.impact-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.impact-card::before {
+  content: "";
+  position: absolute;
+  top: -80%;
+  left: -80%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.25),
+    transparent 60%
+  );
+  transform: rotate(45deg);
+  transition: transform 0.7s ease;
+}
+
+.impact-card:hover::before {
+  transform: rotate(45deg) translate(120px, 120px);
+}
+
+.impact-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 25px 40px rgba(0,0,0,0.15);
+}

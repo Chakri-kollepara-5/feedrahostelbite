@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Utensils, Maximize2, Minimize2, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+import TruckAnimation from '../components/TruckAnimation';
 import HostelBiteSection from '../components/HostelBiteSection';
 import HostelMealBooking from '../components/HostelMealBooking';
 import DonationPaymentSection from '../components/DonationPaymentSection';
@@ -24,9 +26,20 @@ export default function HostelBitePage() {
 
   return (
     <>
+      {/* 🚚 TOP HERO TRUCK ANIMATION */}
+   <div className="bg-[#009688] pt-6 pb-14">
+  <div className="max-w-6xl mx-auto h-[220px] rounded-2xl shadow-xl flex items-center justify-center">
+    <TruckAnimation />
+  </div>
+</div>
+
+
+
+
+      {/* MAIN PAGE */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">
         <div className="max-w-6xl mx-auto p-4 sm:p-6">
-          
+
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
@@ -41,7 +54,9 @@ export default function HostelBitePage() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   HostelBite Integration 🏠
                 </h1>
-                <p className="text-gray-600">Book fresh hostel meals through Feedra</p>
+                <p className="text-gray-600">
+                  Book fresh hostel meals through Feedra
+                </p>
               </div>
             </div>
           </div>
@@ -54,7 +69,9 @@ export default function HostelBitePage() {
           {/* Meal Booking */}
           <div className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Book Your Meals</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                Book Your Meals
+              </h2>
               <div className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
                 PAYMENT READY 💳
               </div>
@@ -65,7 +82,9 @@ export default function HostelBitePage() {
           {/* Donation Support */}
           <div className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Support Our Platform</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                Support Our Platform
+              </h2>
               <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
                 HELP US GROW 🌱
               </div>
@@ -79,6 +98,7 @@ export default function HostelBitePage() {
               <div className="bg-gradient-to-r from-green-500 to-emerald-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 hover:scale-110 transform transition-all duration-300">
                 <span className="text-3xl">🍽️</span>
               </div>
+
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 Launch HostelBite Instantly
               </h2>
@@ -95,63 +115,86 @@ export default function HostelBitePage() {
               <span className="text-2xl mr-2">🔄</span>
               How HostelBite Works with Feedra
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
                   step: '1',
                   icon: '🔍',
                   title: 'Browse Meals',
-                  description: 'Check available meals and timings from your hostel kitchen'
+                  description:
+                    'Check available meals and timings from your hostel kitchen',
                 },
                 {
                   step: '2',
                   icon: '📱',
                   title: 'Book Instantly',
-                  description: 'Select your meals and book with just a few taps'
+                  description:
+                    'Select your meals and book with just a few taps',
                 },
                 {
                   step: '3',
                   icon: '🍽️',
                   title: 'Enjoy Fresh Food',
-                  description: 'Pick up your pre-booked meals at the designated time'
-                }
+                  description:
+                    'Pick up your pre-booked meals at the designated time',
+                },
               ].map((item, index) => (
-                <div key={index} className="text-center hover:scale-105 transform transition-all duration-300">
-                  <div className="bg-gradient-to-br from-green-100 to-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 hover:from-green-200 hover:to-emerald-200 transition-all duration-300">
+                <div
+                  key={index}
+                  className="text-center hover:scale-105 transform transition-all duration-300"
+                >
+                  <div className="bg-gradient-to-br from-green-100 to-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl">{item.icon}</span>
                   </div>
                   <div className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-3 text-sm font-bold shadow-lg">
                     {item.step}
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm">{item.description}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Embedded HostelBite (iFrame) */}
+          {/* Embedded HostelBite */}
           {showEmbedded && (
-            <div className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 ${isFullscreen ? 'p-0' : ''}`}>
-              <div className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${isFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-6xl h-[90vh] max-h-[800px]'}`}>
-                
+            <div
+              className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4 ${
+                isFullscreen ? 'p-0' : ''
+              }`}
+            >
+              <div
+                className={`bg-white shadow-2xl overflow-hidden transition-all duration-300 ${
+                  isFullscreen
+                    ? 'w-full h-full rounded-none'
+                    : 'w-full max-w-6xl h-[90vh] rounded-2xl'
+                }`}
+              >
                 {/* Embedded Header */}
                 <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                    <div className="bg-white/20 p-2 rounded-lg">
                       <Utensils className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg">HostelBite - Book Your Meals</h3>
-                      <p className="text-green-100 text-sm">Fresh meals delivered to your hostel</p>
+                      <h3 className="font-bold text-lg">
+                        HostelBite – Book Your Meals
+                      </h3>
+                      <p className="text-green-100 text-sm">
+                        Fresh meals delivered to your hostel
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={toggleFullscreen}
-                      className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-colors backdrop-blur-sm"
+                      className="bg-white/20 p-2 rounded-lg"
                     >
                       {isFullscreen ? (
                         <Minimize2 className="h-5 w-5" />
@@ -162,7 +205,7 @@ export default function HostelBitePage() {
 
                     <button
                       onClick={closeEmbedded}
-                      className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-colors backdrop-blur-sm"
+                      className="bg-white/20 p-2 rounded-lg"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -170,20 +213,14 @@ export default function HostelBitePage() {
                 </div>
 
                 {/* Embedded Content */}
-                <div className="relative w-full h-full bg-gray-50">
-                  <iframe
-                    src="https://en.wikipedia.org/wiki/Main_Page"
-                    className="w-full h-full border-0"
-                    title="HostelBite Demo"
-                    loading="lazy"
-                    style={{ minHeight: isFullscreen ? '100vh' : '600px' }}
-                  />
-                </div>
-
+                <iframe
+                  src="https://en.wikipedia.org/wiki/Main_Page"
+                  className="w-full h-full border-0"
+                  title="HostelBite Demo"
+                />
               </div>
             </div>
           )}
-
         </div>
       </div>
     </>

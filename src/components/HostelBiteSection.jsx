@@ -39,10 +39,10 @@ const HostelBiteSection = () => {
 
   const getMealEmoji = (meal) => {
     switch (meal) {
-      case 'breakfast': return '🌅';
-      case 'lunch': return '☀️';
-      case 'dinner': return '🌙';
-      default: return '🍽️';
+      case 'breakfast': return '';
+      case 'lunch': return '';
+      case 'dinner': return '';
+      default: return '';
     }
   };
 

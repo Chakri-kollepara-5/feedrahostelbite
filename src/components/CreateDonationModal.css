@@ -1,0 +1,71 @@
+.cont {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cont button {
+  width: 260px;
+  height: 52px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid #6fb07f;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.cont button span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6fb07f;
+}
+
+.cont button img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+}
+
+.animate-submit {
+  animation: extend 0.8s ease-in-out forwards;
+}
+
+.animate-submit span {
+  animation: disappear 0.6s ease-in-out forwards;
+}
+
+.animate-submit img {
+  animation: appear 0.6s ease-in-out forwards;
+}
+
+@keyframes extend {
+  0% {
+    width: 260px;
+  }
+  100% {
+    width: 52px;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
