@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
+import { getAuth } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -16,9 +17,30 @@ const AdminPage = () => {
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingDonations, setLoadingDonations] = useState(true);
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
 
+  /* ---------------- CHECK ADMIN CLAIM ---------------- */
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-  // ---------------- FETCH USERS ----------------
+      if (!user) {
+        setIsAdmin(false);
+        setCheckingAdmin(false);
+        return;
+      }
+
+      const tokenResult = await user.getIdTokenResult();
+      setIsAdmin(tokenResult.claims.admin === true);
+      setCheckingAdmin(false);
+    };
+
+    checkAdmin();
+  }, []);
+
+  /* ---------------- FETCH USERS ---------------- */
   const fetchUsers = async () => {
     try {
       const snap = await getDocs(collection(db, "users"));
@@ -31,7 +53,7 @@ const AdminPage = () => {
     }
   };
 
-  // ---------------- FETCH DONATIONS ----------------
+  /* ---------------- FETCH DONATIONS ---------------- */
   const fetchDonations = async () => {
     try {
       const snap = await getDocs(collection(db, "donations"));
@@ -45,35 +67,53 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-    fetchDonations();
-  }, []);
+    if (isAdmin) {
+      fetchUsers();
+      fetchDonations();
+    }
+  }, [isAdmin]);
 
-  // ---------------- VERIFY USER ----------------
+  /* ---------------- VERIFY USER ---------------- */
   const verifyUser = async (uid) => {
+    if (!isAdmin) {
+      alert("Access denied. Admins only.");
+      return;
+    }
+
     try {
       await updateDoc(doc(db, "users", uid), {
         verified: true,
       });
 
-      console.log("User verified:", uid);
-
-      fetchUsers(); // Refresh table
+      fetchUsers();
     } catch (error) {
       console.error("Error verifying user:", error);
-      alert("You don't have permission to verify! Make sure you're admin.");
+      alert("Verification failed. Check Firestore rules.");
     }
   };
 
+  /* ---------------- LOADING STATES ---------------- */
+  if (checkingAdmin) {
+    return (
+      <div className="p-10 text-center font-bold text-lg">
+        Checking admin permissions...
+      </div>
+    );
+  }
 
+  if (!isAdmin) {
+    return (
+      <div className="p-10 text-center text-red-600 font-bold text-xl">
+        ❌ Access Denied — Admins Only
+      </div>
+    );
+  }
 
-  // METRICS
+  /* ---------------- METRICS ---------------- */
   const totalUsers = users.length;
   const verifiedUsers = users.filter((u) => u.verified).length;
   const totalDonors = users.filter((u) => u.userType === "donor").length;
   const totalNGOs = users.filter((u) => u.userType === "ngo").length;
-
-
 
   return (
     <div className="p-6">
@@ -84,31 +124,13 @@ const AdminPage = () => {
         Manage users, donations, verification, and analytics.
       </p>
 
-
-
-      {/* TOP CARDS */}
+      {/* METRIC CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         {[
-          {
-            label: "Total Users",
-            value: totalUsers,
-            color: "from-green-500 to-emerald-600",
-          },
-          {
-            label: "Verified Users",
-            value: verifiedUsers,
-            color: "from-blue-500 to-indigo-600",
-          },
-          {
-            label: "Donors",
-            value: totalDonors,
-            color: "from-orange-500 to-amber-600",
-          },
-          {
-            label: "NGOs",
-            value: totalNGOs,
-            color: "from-purple-500 to-fuchsia-600",
-          },
+          { label: "Total Users", value: totalUsers, color: "from-green-500 to-emerald-600" },
+          { label: "Verified Users", value: verifiedUsers, color: "from-blue-500 to-indigo-600" },
+          { label: "Donors", value: totalDonors, color: "from-orange-500 to-amber-600" },
+          { label: "NGOs", value: totalNGOs, color: "from-purple-500 to-fuchsia-600" },
         ].map((item, index) => (
           <div
             key={index}
@@ -120,8 +142,6 @@ const AdminPage = () => {
         ))}
       </div>
 
-
-
       {/* USERS TABLE */}
       <h2 className="text-2xl font-bold mb-3">Users Overview</h2>
 
@@ -132,49 +152,16 @@ const AdminPage = () => {
               <th className="p-4 text-left">User</th>
               <th className="p-4 text-left">Email</th>
               <th className="p-4 text-left">Type</th>
-              <th className="p-4 text-left">Location</th>
-              <th className="p-4 text-left">Joined</th>
               <th className="p-4 text-left">Verification</th>
             </tr>
           </thead>
 
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="border-b hover:bg-gray-50 transition">
-
-                {/* NAME & AVATAR */}
-                <td className="p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-200 text-green-800 rounded-full flex items-center justify-center font-bold">
-                    {u.displayName?.charAt(0)?.toUpperCase()}
-                  </div>
-                  <span className="font-medium text-gray-800">{u.displayName}</span>
-                </td>
-
-                {/* EMAIL */}
-                <td className="p-4 text-gray-700">{u.email}</td>
-
-                {/* USER TYPE */}
-                <td className="p-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-white text-xs font-bold ${
-                      u.userType === "donor"
-                        ? "bg-green-600"
-                        : "bg-blue-600"
-                    }`}
-                  >
-                    {u.userType}
-                  </span>
-                </td>
-
-                {/* LOCATION */}
-                <td className="p-4 text-gray-600">{u.location || "—"}</td>
-
-                {/* JOINED */}
-                <td className="p-4 text-gray-600">
-                  {u.joinedAt ? u.joinedAt.toDate().toDateString() : "—"}
-                </td>
-
-                {/* VERIFICATION BUTTON */}
+              <tr key={u.id} className="border-b hover:bg-gray-50">
+                <td className="p-4 font-medium">{u.displayName}</td>
+                <td className="p-4">{u.email}</td>
+                <td className="p-4">{u.userType}</td>
                 <td className="p-4">
                   {!u.verified ? (
                     <button
@@ -189,14 +176,11 @@ const AdminPage = () => {
                     </span>
                   )}
                 </td>
-
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-
 
       {/* DONATIONS TABLE */}
       <h2 className="text-2xl font-bold mb-3">Recent Donations</h2>
@@ -210,14 +194,15 @@ const AdminPage = () => {
               <th className="p-4 text-left">Created At</th>
             </tr>
           </thead>
-
           <tbody>
             {donations.map((d) => (
-              <tr key={d.id} className="border-b hover:bg-gray-50 transition">
-                <td className="p-4 font-medium text-gray-700">{d.description}</td>
-                <td className="p-4 text-gray-600">{d.contactInfo}</td>
-                <td className="p-4 text-gray-600">
-                  {d.createdAt ? d.createdAt.toDate().toDateString() : "—"}
+              <tr key={d.id} className="border-b hover:bg-gray-50">
+                <td className="p-4">{d.description}</td>
+                <td className="p-4">{d.contactInfo}</td>
+                <td className="p-4">
+                  {d.createdAt?.toDate
+                    ? d.createdAt.toDate().toDateString()
+                    : "—"}
                 </td>
               </tr>
             ))}
@@ -225,12 +210,8 @@ const AdminPage = () => {
         </table>
       </div>
 
-
-
-      {/* ANALYTICS PAGE */}
-      <h2 className="text-3xl font-extrabold mb-6">Platform Analytics</h2>
+      {/* ANALYTICS */}
       <AnalyticsPage />
-
     </div>
   );
 };
