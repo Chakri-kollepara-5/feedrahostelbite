@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
@@ -25,9 +25,21 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Welcome back!");
-      navigate("/dashboard");
+     const userCredential = await signInWithEmailAndPassword(
+  auth,
+  email,
+  password
+);
+
+const user = userCredential.user;
+
+// 🔴 TEMPORARY: get ID token for backend testing
+const token = await user.getIdToken();
+console.log("FIREBASE_ID_TOKEN:", token);
+
+toast.success("Welcome back!");
+navigate("/dashboard");
+
     } catch (error) {
       toast.error("Invalid credentials");
     } finally {
