@@ -30,7 +30,8 @@ It allows users to upload leftover food, notify NGOs instantly, and track pickup
 
 🚀 Live Demo
 App	Link
-🌱 Feedra Live https://feedrabite.netlify.app/
+🌱 Feedra Live 
+
 
 🍽️ HostelBite Integration	Add your URL here
 ✨ Features
