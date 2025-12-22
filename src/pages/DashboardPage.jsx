@@ -57,8 +57,10 @@ const DashboardPage = () => {
     toast.success("Donation created successfully!");
   };
 
-  // Reload dashboard
-  const handleRefresh = () => window.location.reload();
+const handleRefresh = () => {
+  window.location.reload();
+};
+
 
   // Error UI
   const ErrorDisplay = ({ error, onRetry }) => (

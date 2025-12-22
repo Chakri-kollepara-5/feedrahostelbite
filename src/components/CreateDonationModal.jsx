@@ -1,68 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   X,
-  MapPin,
   Package,
-  Clock,
   FileText,
   Tag,
   AlertTriangle,
-} from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { createDonation } from '../services/donationService';
-import { sendDonationNotification } from '../services/emailService';
-import toast from 'react-hot-toast';
-
-import './CreateDonationModal.css';
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { db } from "../config/firebase";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
+import toast from "react-hot-toast";
+import "./CreateDonationModal.css";
 
 const CreateDonationModal = ({ onClose, onSuccess }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    foodType: '',
-    description: '',
-    quantity: '',
-    location: '',
-    expiryDate: '',
-    contactInfo: user?.email || '',
-    urgency: 'medium',
+    foodType: "",
+    description: "",
+    quantity: "",
+    location: "",
+    expiryDate: "",
+    contactInfo: user?.email || "",
+    urgency: "medium",
     tags: [],
-    pickupInstructions: '',
+    pickupInstructions: "",
   });
 
   const foodTypes = [
-    'Vegetables',
-    'Fruits',
-    'Grains',
-    'Dairy',
-    'Prepared Meals',
-    'Baked Goods',
-    'Canned Foods',
-    'Beverages',
-    'Snacks',
-    'Other',
+    "Vegetables",
+    "Fruits",
+    "Grains",
+    "Dairy",
+    "Prepared Meals",
+    "Baked Goods",
+    "Canned Foods",
+    "Beverages",
+    "Snacks",
+    "Other",
   ];
 
   const urgencyLevels = [
-    { value: 'low', label: 'Low Priority', description: 'Good for several days' },
-    { value: 'medium', label: 'Medium Priority', description: 'Should be picked up soon' },
-    { value: 'high', label: 'High Priority', description: 'Urgent - expires very soon' },
+    { value: "low", label: "Low Priority" },
+    { value: "medium", label: "Medium Priority" },
+    { value: "high", label: "High Priority" },
   ];
 
   const commonTags = [
-    'Vegetarian',
-    'Vegan',
-    'Gluten-Free',
-    'Organic',
-    'Fresh',
-    'Frozen',
-    'Cooked',
-    'Raw',
-    'Halal',
-    'Kosher',
-    'Dairy-Free',
-    'Nut-Free',
+    "Vegetarian",
+    "Vegan",
+    "Gluten-Free",
+    "Organic",
+    "Fresh",
+    "Frozen",
+    "Cooked",
+    "Raw",
+    "Halal",
+    "Kosher",
+    "Dairy-Free",
+    "Nut-Free",
   ];
 
   const handleInputChange = (e) => {
@@ -83,7 +80,7 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
     e.preventDefault();
 
     if (!user) {
-      toast.error('Please login to create donations');
+      toast.error("Please login to create donations");
       return;
     }
 
@@ -94,73 +91,69 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
       !formData.location ||
       !formData.expiryDate
     ) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill all required fields");
       return;
     }
 
-    if (parseFloat(formData.quantity) <= 0) {
-      toast.error('Quantity must be greater than 0');
+    const qty = Number(formData.quantity);
+    if (qty <= 0) {
+      toast.error("Quantity must be greater than 0");
       return;
     }
 
-    const expiryDate = new Date(formData.expiryDate);
-    const now = new Date();
-
-    if (expiryDate <= new Date(now.getTime() + 3600000)) {
-      toast.error('Expiry date must be at least 1 hour in the future');
+    const expiry = new Date(formData.expiryDate);
+    if (expiry <= new Date()) {
+      toast.error("Expiry date must be in the future");
       return;
     }
 
     setLoading(true);
 
     try {
-      await createDonation({
+      // 🔥 THIS IS THE FIX
+      await addDoc(collection(db, "donations"), {
         foodType: formData.foodType.toLowerCase(),
         description: formData.description,
-        quantity: parseFloat(formData.quantity),
+        quantity: qty,
         location: formData.location,
-        expiryDate: expiryDate.toISOString(),
-        contactInfo: formData.contactInfo,
+
+        // ✅ REQUIRED FOR UI
+        status: "available",
+        createdAt: Timestamp.now(),
+        expiryDate: Timestamp.fromDate(expiry),
+
         donorId: user.uid,
         donorName:
-          user.displayName || user.email?.split('@')[0] || 'Anonymous',
+          user.displayName || user.email?.split("@")[0] || "Anonymous",
+        contactInfo: formData.contactInfo,
+
         urgency: formData.urgency,
         tags: formData.tags,
         pickupInstructions: formData.pickupInstructions,
+
+        claimedBy: null,
+        claimedAt: null,
+        completedAt: null,
       });
 
-      try {
-        await sendDonationNotification({
-          donorName:
-            user.displayName || user.email?.split('@')[0] || 'Anonymous',
-          donorEmail: user.email || '',
-          foodType: formData.foodType,
-          quantity: parseFloat(formData.quantity),
-          location: formData.location,
-        });
-        toast.success('Donation created and notification sent!');
-      } catch {
-        toast.success('Donation created successfully!');
-        toast('Email notification failed to send');
-      }
-
+      toast.success("Donation created successfully!");
       onSuccess();
-    } catch (error) {
-      console.error(error);
-      toast.error('Failed to create donation');
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create donation");
     } finally {
       setLoading(false);
     }
   };
 
   const getMinDatetime = () => {
-    const now = new Date();
-    now.setHours(now.getHours() + 1);
-    return now.toISOString().slice(0, 16);
+    const d = new Date();
+    d.setHours(d.getHours() + 1);
+    return d.toISOString().slice(0, 16);
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 
         {/* HEADER */}
@@ -174,52 +167,29 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
         {/* FORM */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
 
-          {/* FOOD TYPE + PRIORITY */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                <Package className="inline h-4 w-4 mr-1" />
-                Food Type *
-              </label>
-              <select
-                name="foodType"
-                value={formData.foodType}
-                onChange={handleInputChange}
-                className="w-full px-3 py-3 border rounded-xl"
-                required
-              >
-                <option value="">Select food type</option>
-                {foodTypes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                <AlertTriangle className="inline h-4 w-4 mr-1" />
-                Priority *
-              </label>
-              <select
-                name="urgency"
-                value={formData.urgency}
-                onChange={handleInputChange}
-                className="w-full px-3 py-3 border rounded-xl"
-              >
-                {urgencyLevels.map((u) => (
-                  <option key={u.value} value={u.value}>
-                    {u.label} - {u.description}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* FOOD TYPE */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              <Package className="inline h-4 w-4 mr-1" /> Food Type *
+            </label>
+            <select
+              name="foodType"
+              value={formData.foodType}
+              onChange={handleInputChange}
+              className="w-full px-3 py-3 border rounded-xl"
+              required
+            >
+              <option value="">Select food type</option>
+              {foodTypes.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
           </div>
 
           {/* DESCRIPTION */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              <FileText className="inline h-4 w-4 mr-1" />
-              Description *
+              <FileText className="inline h-4 w-4 mr-1" /> Description *
             </label>
             <textarea
               name="description"
@@ -279,8 +249,7 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
           {/* TAGS */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              <Tag className="inline h-4 w-4 mr-1" />
-              Tags
+              <Tag className="inline h-4 w-4 mr-1" /> Tags
             </label>
             <div className="flex flex-wrap gap-2">
               {commonTags.map((tag) => (
@@ -290,8 +259,8 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
                   onClick={() => handleTagToggle(tag)}
                   className={`px-3 py-2 rounded-full text-sm ${
                     formData.tags.includes(tag)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-100'
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-100"
                   }`}
                 >
                   {tag}
@@ -319,20 +288,13 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
               Cancel
             </button>
 
-            <div className="cont">
-              <div className="cont">
-  <button
-    type="submit"
-    disabled={loading}
-    className={loading ? 'animate-submit' : ''}
-  >
-    <span className="btn-text">
-      {loading ? 'Success' : 'Create Donation'}
-    </span>
-  </button>
-</div>
-
-            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-3 bg-green-600 text-white rounded-xl"
+            >
+              {loading ? "Creating..." : "Create Donation"}
+            </button>
           </div>
 
         </form>
