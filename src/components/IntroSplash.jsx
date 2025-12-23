@@ -2,15 +2,27 @@ import { useEffect } from "react";
 
 const IntroSplash = ({ onFinish }) => {
   useEffect(() => {
-    const t = setTimeout(onFinish, 2000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => {
+      onFinish();
+    }, 2600); // intro duration
+
+    return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-      <h1 className="text-5xl md:text-6xl font-extrabold text-green-500 tracking-widest animate-fade">
-        FEEDRABITE
-      </h1>
+    <div className="fixed inset-0 bg-black flex items-center justify-center z-50 overflow-hidden">
+      <div className="netflix-logo-green">
+        <span>F</span>
+        <span>E</span>
+        <span>E</span>
+        <span>D</span>
+        <span>R</span>
+        <span>A</span>
+        <span>B</span>
+        <span>I</span>
+        <span>T</span>
+        <span>E</span>
+      </div>
     </div>
   );
 };

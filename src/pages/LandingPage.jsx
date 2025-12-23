@@ -1,89 +1,78 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HeroSlider from "../components/HeroSlider";
 import IntroSplash from "../components/IntroSplash";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [showIntro, setShowIntro] = useState(
-    () => !localStorage.getItem("feedrabite_intro_seen")
-  );
 
+  // 🔥 Intro always plays on page load
+  const [showIntro, setShowIntro] = useState(true);
+
+  // 1️⃣ SHOW INTRO FIRST
   if (showIntro) {
-    return (
-      <IntroSplash
-        onFinish={() => {
-          localStorage.setItem("feedrabite_intro_seen", "true");
-          setShowIntro(false);
-        }}
-      />
-    );
+    return <IntroSplash onFinish={() => setShowIntro(false)} />;
   }
 
+  // 2️⃣ THEN LANDING PAGE
   return (
     <div className="bg-[#f7faf9] text-gray-900">
 
-      {/* HERO */}
+      {/* HERO SLIDER */}
       <HeroSlider />
 
-      {/* LIVE IMPACT */}
+      {/* LIVE COMMUNITY IMPACT */}
       <section className="bg-white py-20 border-t">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-2xl font-bold mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold mb-14">
             Live Community Impact
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-            <div>
-              <div className="text-3xl font-bold text-green-600">11</div>
-              <p className="text-sm text-gray-600">Total Donations</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600">52 kg</div>
-              <p className="text-sm text-gray-600">Food Saved</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600">5</div>
-              <p className="text-sm text-gray-600">Active Donors</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600">120 kg</div>
-              <p className="text-sm text-gray-600">CO₂ Saved</p>
-            </div>
+            <ImpactCard title="Total Donations" value="11" growth="+12%" />
+            <ImpactCard title="Food Saved (kg)" value="52" growth="+8%" />
+            <ImpactCard title="Active Donors" value="5" growth="+15%" />
+            <ImpactCard title="CO₂ Saved (kg)" value="120" growth="+8%" />
           </div>
+
+          <p className="mt-8 text-sm text-gray-500">
+            Live • Updated at 07:19 AM
+          </p>
         </div>
       </section>
 
-      {/* TRUST */}
-      <section className="bg-gray-50 py-16 border-t text-center">
-        <p className="text-sm text-gray-600 mb-6">
-          Trusted payments & verified operations
-        </p>
+      {/* TRUST SECTION */}
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h3 className="text-xl font-semibold mb-6">
+            Trusted & Verified
+          </h3>
 
-        <div className="flex flex-wrap justify-center gap-6">
-          <div className="px-6 py-3 bg-white border rounded-lg shadow-sm">
-            💳 Powered by <strong>Razorpay</strong>
-          </div>
-
-          <div className="px-6 py-3 bg-white border rounded-lg shadow-sm">
-            🇮🇳 Verified by Government of India
-            <div className="text-xs text-gray-500 mt-1">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 text-gray-700">
+            <span className="px-4 py-2 bg-white rounded-lg shadow">
+              🔐 Secure Payments (Razorpay)
+            </span>
+            <span className="px-4 py-2 bg-white rounded-lg shadow">
+              🏛 Verified by Government of India
+            </span>
+            <span className="px-4 py-2 bg-white rounded-lg shadow">
               UDYAM-AP-10-0116772
-            </div>
+            </span>
           </div>
         </div>
       </section>
 
       {/* FINAL CTA */}
       <section className="bg-green-600 text-white py-24 text-center">
-        <h2 className="text-3xl font-bold mb-4">
-          Ready to make real impact?
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          Turn surplus food into real impact
         </h2>
-        <p className="mb-10 text-white/90">
-          Whether you’re a donor or an NGO — start in seconds.
+
+        <p className="text-white/90 mb-10 max-w-2xl mx-auto">
+          Join donors, NGOs, and volunteers building a zero-waste future.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex justify-center gap-4">
           <button
             onClick={() => navigate("/login")}
             className="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
@@ -98,14 +87,21 @@ const LandingPage = () => {
             Create Free Account
           </button>
         </div>
-
-        <p className="mt-4 text-sm text-white/90">
-          Existing user? Login • New user? Create an account
-        </p>
       </section>
-
     </div>
   );
 };
 
 export default LandingPage;
+
+/* ---------------- SMALL COMPONENT ---------------- */
+
+const ImpactCard = ({ title, value, growth }) => {
+  return (
+    <div className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
+      <div className="text-3xl font-bold text-green-600">{value}</div>
+      <div className="text-sm text-gray-600 mt-1">{title}</div>
+      <div className="text-xs text-green-500 mt-2">{growth}</div>
+    </div>
+  );
+};

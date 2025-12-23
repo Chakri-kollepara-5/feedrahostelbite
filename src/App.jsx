@@ -1,33 +1,27 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import AdminPage from "./pages/Admin.jsx";
-import LandingPage from "./pages/LandingPage";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-
-
-
-import ChatAssistButton from "./components/ChatAssistButtonwhatsapp";
-import Footer from "./components/Footer";
-
-import { AuthProvider, useAuth } from './context/AuthContext';
-
-// Components
-import Navigation from './components/Navigation';
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // Pages
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import DashboardPage from './pages/DashboardPage';
-import DonationsPage from './pages/DonationsPage';
-import AnalyticsPage from './pages/AnalyticsPage';
-import CommunityPage from './pages/CommunityPage';
-import SettingsPage from './pages/SettingsPage';
-import HostelBitePage from './pages/HostelBitePage';
-import PaymentsPage from './pages/PaymentsPage';
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import DashboardPage from "./pages/DashboardPage";
+import AdminPage from "./pages/Admin.jsx";
+import DonationsPage from "./pages/DonationsPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import CommunityPage from "./pages/CommunityPage";
+import SettingsPage from "./pages/SettingsPage";
+import HostelBitePage from "./pages/HostelBitePage";
+import PaymentsPage from "./pages/PaymentsPage";
 
-
+// Components
+import Navigation from "./components/Navigation";
+import ChatAssistButton from "./components/ChatAssistButtonwhatsapp";
+import Footer from "./components/Footer";
 
 // ------------------ ROUTE GUARDS ------------------
 
@@ -36,8 +30,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600" />
       </div>
     );
   }
@@ -50,16 +44,14 @@ const PublicRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600" />
       </div>
     );
   }
 
   return user ? <Navigate to="/dashboard" /> : children;
 };
-
-
 
 // ------------------ APP CONTENT ------------------
 
@@ -69,20 +61,15 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Navigation (Only when logged in) */}
+      {/* Navigation only AFTER login */}
       {user && <Navigation />}
 
       <Routes>
 
-        <Route
-  path="/"
-  element={
-    <PublicRoute>
-      <LandingPage />
-    </PublicRoute>
-  }
-/>
+        {/* 🔥 LANDING PAGE — NO GUARDS */}
+        <Route path="/" element={<LandingPage />} />
 
+        {/* AUTH PAGES */}
         <Route
           path="/login"
           element={
@@ -110,6 +97,7 @@ function AppContent() {
           }
         />
 
+        {/* PROTECTED PAGES */}
         <Route
           path="/dashboard"
           element={
@@ -118,15 +106,15 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-        <Route
-  path="/admin"
-  element={
-    <ProtectedRoute>
-      <AdminPage />
-    </ProtectedRoute>
-  }
-/>
 
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/donations"
@@ -145,7 +133,6 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-        
 
         <Route
           path="/community"
@@ -183,30 +170,14 @@ function AppContent() {
           }
         />
 
-        {/* 404 fallback */}
+        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      {/* Toast */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            iconTheme: { primary: '#10B981', secondary: '#fff' },
-          },
-          error: {
-            duration: 4000,
-            iconTheme: { primary: '#EF4444', secondary: '#fff' },
-          },
-        }}
-      />
+      {/* TOASTS */}
+      <Toaster position="top-right" />
 
+      {/* Floating Assistant */}
       {user && <ChatAssistButton />}
 
       <Footer />
@@ -214,7 +185,7 @@ function AppContent() {
   );
 }
 
-// ------------------ ROOT APP WRAPPER ------------------
+// ------------------ ROOT ------------------
 
 function App() {
   return (

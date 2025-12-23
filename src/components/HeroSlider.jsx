@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+/* ---------------- SLIDES DATA ---------------- */
+
 const slides = [
   {
     title: "Surplus food, ready to serve.",
@@ -30,26 +32,82 @@ const slides = [
   },
 ];
 
+/* ---------------- TEXT ANIMATION VARIANTS ---------------- */
+
+const titleContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.25,
+    },
+  },
+};
+
+const titleWord = {
+  hidden: {
+    opacity: 0,
+    y: 90,
+    scale: 0.85,
+    filter: "blur(14px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 70,
+      damping: 18,
+      mass: 0.9,
+    },
+  },
+};
+
+const subtitleVariant = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      delay: 0.7,
+      duration: 0.9,
+      ease: "easeOut",
+    },
+  },
+};
+
+/* ---------------- COMPONENT ---------------- */
+
 const HeroSlider = () => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
 
+  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 6500);
     return () => clearInterval(timer);
   }, []);
 
+  const words = slides[index].title.split(" ");
+
   return (
-    <section className="relative h-[85vh] overflow-hidden">
+    <section className="relative h-[90vh] overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
-          key={index}
-          initial={{ opacity: 0, scale: 1.05 }}
+          key={index} // 🔥 forces re-animation ALWAYS
+          initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 1.1, ease: "easeInOut" }}
           className="absolute inset-0"
           style={{
             backgroundImage: `url(${slides[index].bg})`,
@@ -57,41 +115,54 @@ const HeroSlider = () => {
             backgroundPosition: "center",
           }}
         >
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black/60" />
+          {/* DARK OVERLAY */}
+          <div className="absolute inset-0 bg-black/65" />
 
-          {/* Content */}
+          {/* CONTENT */}
           <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 text-white">
+
+            {/* TITLE */}
             <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-extrabold mb-4 max-w-4xl"
+              key={`title-${index}`}
+              variants={titleContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-4xl md:text-6xl font-extrabold mb-6 max-w-4xl leading-tight"
             >
-              {slides[index].title}
+              {words.map((word, i) => (
+                <motion.span
+                  key={i}
+                  variants={titleWord}
+                  className="inline-block mr-3"
+                >
+                  {word}
+                </motion.span>
+              ))}
             </motion.h1>
 
+            {/* SUBTITLE */}
             <motion.p
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.15, duration: 0.6 }}
+              key={`subtitle-${index}`}
+              variants={subtitleVariant}
+              initial="hidden"
+              animate="visible"
               className="text-lg md:text-xl text-white/90 max-w-2xl"
             >
               {slides[index].subtitle}
             </motion.p>
 
-            {/* CTA BUTTONS */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
+            {/* CTA */}
+            <div className="mt-12 flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => navigate("/login")}
-                className="px-8 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+                className="px-9 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition"
               >
                 Login
               </button>
 
               <button
                 onClick={() => navigate("/register")}
-                className="px-8 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-gray-100 transition"
+                className="px-9 py-3 rounded-lg bg-white text-green-700 font-semibold hover:bg-gray-100 transition"
               >
                 Create Free Account
               </button>
@@ -104,13 +175,13 @@ const HeroSlider = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dots */}
+      {/* DOT NAVIGATION */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => setIndex(i)}
-            className={`w-3 h-3 rounded-full ${
+            className={`w-3.5 h-3.5 rounded-full transition ${
               index === i ? "bg-green-400" : "bg-white/40"
             }`}
           />
