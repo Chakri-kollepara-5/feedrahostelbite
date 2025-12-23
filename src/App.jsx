@@ -82,14 +82,9 @@ function AppContent() {
         <Route path="/" element={<LandingPage />} />
 
         {/* AUTH PAGES */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
+      <Route path="/login" element={<LoginPage />} />
+<Route path="/register" element={<RegisterPage />} />
+<Route path="/reset-password" element={<ResetPasswordPage />} />
 
         <Route
           path="/register"

@@ -8,7 +8,7 @@ const slides = [
   {
     title: "Surplus food, ready to serve.",
     subtitle: "Packed and verified food available near you.",
-    bg: "/slider/1-food-packed.jpg",
+    bg: "/slider/5-donation-kit.jpg",
   },
   {
     title: "Donations happening live.",
@@ -28,7 +28,9 @@ const slides = [
   {
     title: "A system built on trust.",
     subtitle: "Secure payments • Verified NGOs • Govt registered",
-    bg: "/slider/5-donation-kit.jpg",
+    bg: "/slider/1-food-packed.jpg",
+
+   
   },
 ];
 

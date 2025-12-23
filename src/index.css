@@ -72,6 +72,7 @@
   animation: letter-rise-green 0.6s ease-out forwards;
 }
 
+
 /* stagger letters */
 .netflix-logo-green span:nth-child(1) { animation-delay: 0.2s; }
 .netflix-logo-green span:nth-child(2) { animation-delay: 0.28s; }
