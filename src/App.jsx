@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -23,7 +29,7 @@ import Navigation from "./components/Navigation";
 import ChatAssistButton from "./components/ChatAssistButtonwhatsapp";
 import Footer from "./components/Footer";
 
-// ------------------ ROUTE GUARDS ------------------
+/* ---------------- ROUTE GUARDS ---------------- */
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -53,20 +59,26 @@ const PublicRoute = ({ children }) => {
   return user ? <Navigate to="/dashboard" /> : children;
 };
 
-// ------------------ APP CONTENT ------------------
+/* ---------------- APP CONTENT ---------------- */
 
 function AppContent() {
   const { user } = useAuth();
+  const location = useLocation();
+
+  // ❌ Navbar must NOT appear on these routes
+  const hideNavbarRoutes = ["/", "/login", "/register", "/reset-password"];
+
+  const shouldShowNavbar =
+    user && !hideNavbarRoutes.includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Navigation only AFTER login */}
-      {user && <Navigation />}
+      {/* ✅ NAVBAR (ONLY FOR APP PAGES) */}
+      {shouldShowNavbar && <Navigation />}
 
       <Routes>
-
-        {/* 🔥 LANDING PAGE — NO GUARDS */}
+        {/* 🔥 LANDING PAGE (NO AUTH GUARD) */}
         <Route path="/" element={<LandingPage />} />
 
         {/* AUTH PAGES */}
@@ -97,7 +109,7 @@ function AppContent() {
           }
         />
 
-        {/* PROTECTED PAGES */}
+        {/* PROTECTED APP PAGES */}
         <Route
           path="/dashboard"
           element={
@@ -177,7 +189,7 @@ function AppContent() {
       {/* TOASTS */}
       <Toaster position="top-right" />
 
-      {/* Floating Assistant */}
+      {/* FLOATING CHAT (ONLY WHEN LOGGED IN) */}
       {user && <ChatAssistButton />}
 
       <Footer />
@@ -185,7 +197,7 @@ function AppContent() {
   );
 }
 
-// ------------------ ROOT ------------------
+/* ---------------- ROOT ---------------- */
 
 function App() {
   return (
