@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import AdminPage from "./pages/Admin.jsx";
+import LandingPage from "./pages/LandingPage";
+
 
 
 
@@ -72,7 +74,14 @@ function AppContent() {
 
       <Routes>
 
-        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+        <Route
+  path="/"
+  element={
+    <PublicRoute>
+      <LandingPage />
+    </PublicRoute>
+  }
+/>
 
         <Route
           path="/login"
