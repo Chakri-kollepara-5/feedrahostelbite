@@ -131,3 +131,7 @@
     left: 220%;
   }
 }
+
+body {
+  overflow-x: hidden;
+}
