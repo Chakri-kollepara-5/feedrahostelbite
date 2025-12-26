@@ -82,11 +82,13 @@
     text-align: center;
   }
 }
+
 .partner-wrapper {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-bottom: 0;
 }
+
 .partner-card-small {
   display: flex;
   align-items: center;
@@ -140,4 +142,21 @@
     width: 30px;
     height: 30px;
   }
+}
+
+.partner-link-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #111827;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: .25s ease;
+}
+
+.partner-link-btn:hover {
+  background: #020617;
 }

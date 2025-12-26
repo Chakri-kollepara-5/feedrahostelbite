@@ -236,8 +236,7 @@ const handleRefresh = () => {
           </div>
           {/* ================= PARTNERS ================= */}
 
-
-   <section className="partner-wrapper">
+<section className="partner-wrapper">
   <motion.div
     initial={{ opacity: 0, y: 25 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -262,9 +261,20 @@ const handleRefresh = () => {
       <div className="partner-meta">
         Regd No: 114 of 2024 • Logo used with permission
       </div>
+
+      {/* 🎥 YouTube Channel Link */}
+      <a
+        href="https://youtube.com/@kbchannel786?si=DnaGWs-_Z4IjAs5k"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="partner-link-btn"
+      >
+        Visit Partner YouTube Channel
+      </a>
     </div>
   </motion.div>
 </section>
+
 
 
       {/* User's Recent Donations (donor only) */}

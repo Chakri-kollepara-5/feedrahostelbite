@@ -5,7 +5,6 @@ import IntroSplash from "../components/IntroSplash";
 import HeroSlider from "../components/HeroSlider";
 import partnerLogo from "../assets/patner.jpeg";
 
-
 /* ---------------- ANIMATION VARIANTS ---------------- */
 
 const fadeUp = {
@@ -17,39 +16,36 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true);
 
-  /* 🔥 ALWAYS SHOW INTRO FIRST */
-  if (showIntro) {
-    return <IntroSplash onFinish={() => setShowIntro(false)} />;
-  }
+  if (showIntro) return <IntroSplash onFinish={() => setShowIntro(false)} />;
 
   return (
     <div className="w-full overflow-x-hidden bg-[#f7faf9] text-gray-900">
 
-      {/* ================= HERO SLIDER ================= */}
+      {/* ================= HERO ================= */}
       <section className="min-h-[100svh]">
         <HeroSlider />
       </section>
 
-      {/* ================= WRAPPER TEXT ANIMATION ================= */}
+      {/* ================= VALUE PROP ================= */}
       <section className="bg-white py-20 px-4">
         <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          transition={{ duration: 0.7 }}
           className="max-w-5xl mx-auto text-center"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
+          <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">
             Saving food is not charity.
             <span className="block text-green-600 mt-2">
               It’s responsibility.
             </span>
           </h2>
 
-          <p className="mt-6 text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            FeedraBite connects surplus food to NGOs and communities using
-            real-time tracking and verified donations.
+          <p className="mt-6 text-gray-600 text-base max-w-2xl mx-auto">
+            FeedraBite connects surplus food with NGOs and communities through
+            real-time tracking, verified donors, and smart logistics.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -70,7 +66,7 @@ const LandingPage = () => {
         </motion.div>
       </section>
 
-      {/* ================= LIVE IMPACT ================= */}
+      {/* ================= IMPACT ================= */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <ImpactCard title="Total Donations" value="11" />
@@ -99,7 +95,46 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ================= FINAL CTA ================= */}
+      {/* ================= PARTNER ================= */}
+      <section className="partner-wrapper px-4 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="partner-card max-w-4xl mx-auto"
+        >
+          <img
+            src={partnerLogo}
+            alt="Jani Basha Seva Samithi"
+            className="partner-logo"
+          />
+
+          <div className="partner-text">
+            <h3 className="shine-text">Collaboration Partner</h3>
+
+            <p>
+              Feedra is collaborating with <b>Jani Basha Seva Samithi</b> to
+              support community-focused initiatives and create meaningful social impact.
+            </p>
+
+            <div className="partner-meta">
+              Regd No: 114 of 2024 • Logo used with permission
+            </div>
+
+            <a
+              href="https://youtube.com/@kbchannel786?si=DnaGWs-_Z4IjAs5k"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="partner-link-btn"
+            >
+              🎥 Visit Partner YouTube Channel
+            </a>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ================= CTA ================= */}
       <section className="bg-green-600 text-white py-24 px-4 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
           Turn surplus food into real impact
@@ -125,47 +160,6 @@ const LandingPage = () => {
           </button>
         </div>
       </section>
-{/* ================= PARTNERS ================= */}
-<section className="bg-gray-50 py-20 px-4">
-  <motion.div
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true }}
-    transition={{ duration: 0.7 }}
-    className="max-w-6xl mx-auto text-center"
-  >
-    <h2 className="text-2xl sm:text-3xl font-bold mb-10">
-      Our Collaborations
-    </h2>
-
-    <div className="bg-white shadow-md rounded-2xl p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6">
-      <img
-        src={partnerLogo}
-        alt="Jani Basha Seva Samithi"
-        className="w-28 h-28 rounded-full object-cover border"
-      />
-
-      <div className="text-left sm:text-start">
-        <h3 className="text-xl font-semibold">
-          Jani Basha Seva Samithi
-        </h3>
-
-        <p className="text-gray-600 mt-2 text-sm sm:text-base max-w-2xl">
-          We are collaborating with <b>Jani Basha Seva Samithi</b> to support
-          community-focused initiatives and create meaningful social
-          impact using Feedra.
-        </p>
-
-        <p className="text-gray-400 text-xs mt-2">
-          Regd No: 114 of 2024 • Logo used with permission
-        </p>
-      </div>
-    </div>
-  </motion.div>
-</section>
-
-
     </div>
   );
 };
