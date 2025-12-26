@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Plus, MapPin, Users, AlertCircle, Zap, RefreshCw } from "lucide-react";
 import "../components/impactAnimation.css";
-
-
+import "../components/PartnerSection.css";
+import partnerLogo from "../assets/patner.jpeg";
+import { motion } from "framer-motion";
 
 import { useAuth } from "../context/AuthContext";
 import { useRealTimeDonations } from "../hooks/useRealTimeData";
@@ -226,14 +227,47 @@ const handleRefresh = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Book Hostel Meals</h2>
             <HostelMealBooking />
           </div>
+          
 
           {/* Donate Money */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Support Our Mission</h2>
             <DonationPaymentSection />
           </div>
+          {/* ================= PARTNERS ================= */}
 
-          {/* User's Recent Donations (donor only) */}
+
+   <section className="partner-wrapper">
+  <motion.div
+    initial={{ opacity: 0, y: 25 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7 }}
+    className="partner-card"
+  >
+    <img
+      src={partnerLogo}
+      alt="Jani Basha Seva Samithi"
+      className="partner-logo"
+    />
+
+    <div className="partner-text">
+      <h3 className="shine-text">Collaboration Partner</h3>
+
+      <p>
+        Feedra is collaborating with <b>Jani Basha Seva Samithi</b> to support
+        community-focused initiatives and create meaningful social impact.
+      </p>
+
+      <div className="partner-meta">
+        Regd No: 114 of 2024 • Logo used with permission
+      </div>
+    </div>
+  </motion.div>
+</section>
+
+
+      {/* User's Recent Donations (donor only) */}
           {user?.userType === "donor" && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">My Recent Donations</h2>

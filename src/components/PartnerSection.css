@@ -1,0 +1,143 @@
+.partner-wrapper {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.partner-card {
+  max-width: 900px;
+  margin: auto;
+  background: linear-gradient(135deg, #ffffff, #f8fffb);
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+  animation: softGlow 3.5s ease-in-out infinite;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.partner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.10);
+}
+
+.partner-logo {
+  width: 95px;
+  height: 95px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 3px solid rgba(16,185,129,.4);
+  box-shadow: 0 5px 18px rgba(16,185,129,.2);
+}
+
+.partner-text h3 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 700;
+  color: #111827;
+}
+
+.partner-text p {
+  margin-top: 6px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.partner-meta {
+  font-size: 11px;
+  margin-top: 4px;
+  color: #9ca3af;
+}
+
+/* 🔆 Soft glow breathing effect */
+@keyframes softGlow {
+  0% { box-shadow: 0 0 0px rgba(16,185,129,.18); }
+  50% { box-shadow: 0 0 28px rgba(16,185,129,.32); }
+  100% { box-shadow: 0 0 0px rgba(16,185,129,.18); }
+}
+
+/* ✨ Rich text shimmer effect (subtle) */
+.shine-text {
+  background: linear-gradient(90deg,#111,#16a34a,#111);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: textShine 5.5s ease-in-out infinite;
+}
+
+@keyframes textShine {
+  0% { background-position: 0%; }
+  50% { background-position: 100%; }
+  100% { background-position: 0%; }
+}
+
+/* 📱 Responsive */
+@media(max-width: 768px){
+  .partner-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+.partner-wrapper {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 0;
+}
+.partner-card-small {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 8px 10px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  max-width: 260px;
+}
+
+.partner-logo-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255,255,255,.5);
+}
+
+.partner-title {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: .9;
+}
+
+.partner-name {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.partner-meta {
+  font-size: 10px;
+  opacity: .75;
+  margin-top: 2px;
+}
+
+/* Mobile polish */
+@media (max-width: 768px) {
+  footer {
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+  }
+
+  .partner-card-small {
+    max-width: 220px;
+    padding: 7px 8px;
+  }
+
+  .partner-logo-small {
+    width: 30px;
+    height: 30px;
+  }
+}

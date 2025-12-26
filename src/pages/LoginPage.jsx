@@ -5,6 +5,9 @@ import { auth } from "../config/firebase";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import FlipText from "../components/FlipText";
+import "../components/PartnerSection.css";
+import partnerLogo from "../assets/patner.jpeg";
+import { motion } from "framer-motion";
 
 
 
@@ -192,6 +195,7 @@ navigate("/dashboard");
           </div>
         </div>
       </div>
+     
     </div>
   );
 }

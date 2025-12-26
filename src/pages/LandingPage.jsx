@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import IntroSplash from "../components/IntroSplash";
 import HeroSlider from "../components/HeroSlider";
+import partnerLogo from "../assets/patner.jpeg";
+
 
 /* ---------------- ANIMATION VARIANTS ---------------- */
 
@@ -123,6 +125,47 @@ const LandingPage = () => {
           </button>
         </div>
       </section>
+{/* ================= PARTNERS ================= */}
+<section className="bg-gray-50 py-20 px-4">
+  <motion.div
+    variants={fadeUp}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    transition={{ duration: 0.7 }}
+    className="max-w-6xl mx-auto text-center"
+  >
+    <h2 className="text-2xl sm:text-3xl font-bold mb-10">
+      Our Collaborations
+    </h2>
+
+    <div className="bg-white shadow-md rounded-2xl p-6 sm:p-10 flex flex-col sm:flex-row items-center gap-6">
+      <img
+        src={partnerLogo}
+        alt="Jani Basha Seva Samithi"
+        className="w-28 h-28 rounded-full object-cover border"
+      />
+
+      <div className="text-left sm:text-start">
+        <h3 className="text-xl font-semibold">
+          Jani Basha Seva Samithi
+        </h3>
+
+        <p className="text-gray-600 mt-2 text-sm sm:text-base max-w-2xl">
+          We are collaborating with <b>Jani Basha Seva Samithi</b> to support
+          community-focused initiatives and create meaningful social
+          impact using Feedra.
+        </p>
+
+        <p className="text-gray-400 text-xs mt-2">
+          Regd No: 114 of 2024 • Logo used with permission
+        </p>
+      </div>
+    </div>
+  </motion.div>
+</section>
+
+
     </div>
   );
 };
