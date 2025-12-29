@@ -1,95 +1,109 @@
-# 🌱 Feedra – India’s Smart Food Donation Ecosystem
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<div align="center">
+</head>
 
-![Feedra Banner](https://img.shields.io/badge/Feedra-Food_Saver_India-32CD32?style=for-the-badge&logo=leaflet&logoColor=white)
+<body>
+
+<div class="container">
+
+<h1>🌱 Feedra – India’s Smart Food Donation Ecosystem</h1>
+
+<div class="center">
+  <img class="badge" src="https://img.shields.io/badge/Feedra-Food_Saver_India-32CD32?style=for-the-badge&logo=leaflet&logoColor=white">
+</div>
 
 <h2>🍽️ A Smart, Real-Time Food Donation Platform Built for India</h2>
 <h3>Connecting Hostels, PGs, Students & NGOs to Reduce Food Waste</h3>
 
+<hr/>
+
+<div class="card center">
+  🚀 <strong>Live Demo</strong> • 📘 <strong>Tech Stack</strong> • 🏗️ <strong>Architecture</strong> • 📞 <strong>Contact</strong>
 </div>
 
----
+<div class="card">
+  <h2>🌍 Overview</h2>
 
+  <p>Feedra is a real-time food donation application designed to help India fight food wastage by connecting:</p>
 
-🚀 Live Demo
- • 📘 Tech Stack
- • 🏗️ Architecture
- • 📞 Contact
+  <ul>
+    <li>✔ Donors (Hostels, PGs, Restaurants, Students)</li>
+    <li>✔ NGOs & Volunteers</li>
+    <li>✔ HostelBite Meal Booking Platform</li>
+  </ul>
 
+  <p>It allows users to upload leftover food, notify NGOs instantly, and track pickup status — all in real time using Firebase.</p>
 </div>
-🌍 Overview
 
-Feedra is a real-time food donation application designed to help India fight food wastage by connecting:
+<div class="card">
+  <h2>🚀 Live Demo</h2>
 
-✔ Donors (Hostels, PGs, Restaurants, Students)
-✔ NGOs & Volunteers
-✔ HostelBite Meal Booking Platform
-
-It allows users to upload leftover food, notify NGOs instantly, and track pickup status — all in real time using Firebase.
-
-🚀 Live Demo
-App	Link
-🌱 Feedra Live 
-
-
-🍽️ HostelBite Integration	Add your URL here
-✨ Features
-🌱 Food Donation (Feedra)
-
-Add leftover meals with details
-
-Upload food images
-
-Real-time updates via Firebase
-
-NGO pickup tracking
-
-WhatsApp contact button
-
-🍽️ Meal Booking (HostelBite)
-
-Search hostels/meals
-
-Pre-book or instant book
-
-Razorpay payment integration
-
-Hygiene ratings & reviews
-
-🔗 Integration
-
-"Donate Leftovers" button inside HostelBite
-
-Opens Feedra directly or embedded
-
-Shared green/white theme
-
-🛠 Tech Stack
-<div align="center">
-Category	Technologies
-Frontend	React.js, TypeScript, TailwindCSS, React Router
-Backend	Firebase Auth, Firestore, Real-Time Database
-Design	TailwindCSS, Lucide Icons
-Payments (HostelBite)	Razorpay
-Deployment	Netlify + Vercel
+  <table>
+    <tr><th>App</th><th>Link</th></tr>
+    <tr><td>🌱 Feedra Live</td><td><a href="https://feedra.online" target="_blank">https://feedra.online</a></td></tr>
+  </table>
 </div>
-🏗️ Architecture Overview
-<div align="center">
-flowchart TD
-    A[Donor - Hostel / Student] --> B[Feedra Donation Form]
-    B --> C[Firestore DB - Real-time]
-    C --> D[NGO Dashboard - Live Updates]
-    D --> E[Pickup Tracking]
 
-    A2[HostelBite User] --> F[Donate Leftovers Button]
-    F --> B
+<div class="card">
+  <h2>✨ Features</h2>
 
-    A3[Admin - Hostel] --> G[Admin Dashboard]
-    G --> H[Meals + Donations]
+  <h3>🌱 Food Donation (Feedra)</h3>
+  <ul>
+    <li>Add leftover meals with details</li>
+    <li>Upload food images</li>
+    <li>Real-time updates via Firebase</li>
+    <li>NGO pickup tracking</li>
+    <li>WhatsApp contact button</li>
+  </ul>
 
+  <h3>🍽 Meal Booking (HostelBite)</h3>
+  <ul>
+    <li>Search hostels/meals</li>
+    <li>Pre-book or instant book</li>
+    <li>Razorpay payment integration</li>
+    <li>Hygiene ratings & reviews</li>
+  </ul>
+
+  <h3>🔗 Integration</h3>
+  <ul>
+    <li>“Donate Leftovers” button inside HostelBite</li>
+    <li>Opens Feedra directly or embedded</li>
+    <li>Shared green/white theme</li>
+  </ul>
 </div>
-📁 Folder Structure
+
+<div class="card">
+  <h2>🛠 Tech Stack</h2>
+
+  <table>
+    <tr><th>Category</th><th>Technologies</th></tr>
+    <tr><td>Frontend</td><td>React.js, TypeScript, TailwindCSS, React Router</td></tr>
+    <tr><td>Backend</td><td>Firebase Auth, Firestore, Real-Time Database</td></tr>
+    <tr><td>Design</td><td>TailwindCSS, Lucide Icons</td></tr>
+    <tr><td>Payments (HostelBite)</td><td>Razorpay</td></tr>
+    <tr><td>Deployment</td><td>Netlify + Vercel</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>🏗 Architecture Overview</h2>
+
+  <pre>
+Donor → Feedra Donation Form → Firestore DB (Realtime)
+     → NGO Dashboard → Pickup Tracking
+     → HostelBite Users → Donate Leftovers Button
+     → Admin Dashboard → Meals + Donations
+  </pre>
+</div>
+
+<div class="card">
+  <h2>📁 Folder Structure</h2>
+
+  <pre>
 feedra/
 ├── src/
 │   ├── components/
@@ -101,24 +115,41 @@ feedra/
 ├── public/
 ├── package.json
 └── README.md
+  </pre>
+</div>
 
-🧩 Installation
+<div class="card">
+  <h2>🧩 Installation</h2>
+
+  <pre>
 git clone https://github.com/Chakri-kollepara-5/feedra.git
 cd feedra
 npm install
 npm run dev
+  </pre>
 
+  <p>Configure Firebase in:</p>
 
-Configure Firebase in:
+  <pre>src/firebase/config.ts</pre>
+</div>
 
-src/firebase/config.ts
+<div class="card">
+  <h2>📞 Contact</h2>
 
-📞 Contact
-<div align="center"> <table> <tr> <td><strong>Developer</strong></td> <td>Kollepara Venkata Sri Chakravarthi (Chakri)</td> </tr> <tr> <td><strong>Phone</strong></td> <td>+91 88856 28836</td> </tr> <tr> <td><strong>Email</strong></td> <td>feedra985@gmail.com</td> </tr> <tr> <td><strong>Location</strong></td> <td>Visakhapatnam, Andhra Pradesh 🇮🇳</td> </tr> </table> </div>
-<div align="center">
-💚 Built with Purpose — Feed the People, Not the Landfill.
-<img src="https://img.shields.io/badge/Save_Food-Save_Lives-16a34a?style=for-the-badge" />
+  <table>
+    <tr><td><strong>Developer</strong></td><td>Kollepara Venkata Sri Chakravarthi (Chakri)</td></tr>
+    <tr><td><strong>Phone</strong></td><td>+91 88856 28836</td></tr>
+    <tr><td><strong>Email</strong></td><td>feedra985@gmail.com</td></tr>
+    <tr><td><strong>Location</strong></td><td>Visakhapatnam, Andhra Pradesh 🇮🇳</td></tr>
+  </table>
+</div>
 
-© 2025 Feedra • HostelBite Integrated System
+<div class="footer">
+  💚 Built with Purpose — Feed the People, Not the Landfill.<br>
+  <img src="https://img.shields.io/badge/Save_Food-Save_Lives-16a34a?style=for-the-badge"><br><br>
+  © 2025 Feedra • HostelBite Integrated System
+</div>
 
 </div>
+</body>
+</html>
