@@ -51,14 +51,14 @@ const LandingPage = () => {
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={() => navigate("/login")}
-              className="px-8 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+              className="px-8 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 shadow-md hover:shadow-lg transition"
             >
               Login
             </button>
 
             <button
               onClick={() => navigate("/register")}
-              className="px-8 py-3 rounded-lg border border-green-600 text-green-700 font-semibold hover:bg-green-50 transition"
+              className="px-8 py-3 rounded-lg border border-green-600 text-green-700 font-semibold hover:bg-green-50 shadow-sm hover:shadow-md transition"
             >
               Create Account
             </button>
@@ -80,17 +80,32 @@ const LandingPage = () => {
         </p>
       </section>
 
-      {/* ================= TRUST ================= */}
-      <section className="bg-white py-16 px-4">
+      {/* ================= TRUST — HIGHLIGHTED ================= */}
+      <section className="bg-white py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h3 className="text-xl font-semibold mb-8">
-            Trusted & Verified
+
+          <h3 className="text-2xl font-bold mb-6">
+            Trusted & Verified Platform
           </h3>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <TrustBadge text="Secure Payments via Razorpay" />
-            <TrustBadge text="Verified by Government of India" />
-            <TrustBadge text="UDYAM-AP-10-0116772" />
+          <div className="w-24 h-1 bg-green-600 mx-auto mb-10 rounded-full" />
+
+          <div className="bg-white border border-green-100 shadow-xl rounded-2xl p-8">
+
+            <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+              We partner only with certified NGOs, verified donors and secure payment
+              gateways to ensure safe, transparent and accountable food redistribution.
+            </p>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <TrustBadge text="Secure Payments via Razorpay" />
+              <TrustBadge text="Verified by Government of India" />
+              <TrustBadge text="UDYAM-AP-10-0116772" />
+            </div>
+
+            <p className="text-xs text-gray-500 mt-6">
+              Your trust matters — every donation is verified and traceable.
+            </p>
           </div>
         </div>
       </section>
@@ -169,14 +184,22 @@ export default LandingPage;
 /* ---------------- SMALL COMPONENTS ---------------- */
 
 const ImpactCard = ({ title, value }) => (
-  <div className="bg-white rounded-xl p-6 shadow hover:shadow-lg transition">
+  <div className="bg-white rounded-xl p-6 shadow hover:shadow-xl transition border border-gray-100">
     <div className="text-3xl font-bold text-green-600">{value}</div>
     <div className="text-xs text-gray-600 mt-2">{title}</div>
   </div>
 );
 
 const TrustBadge = ({ text }) => (
-  <div className="px-5 py-3 bg-gray-50 border rounded-lg text-sm">
-    {text}
+  <div
+    className="px-6 py-3 rounded-xl border bg-white shadow-sm 
+    hover:shadow-lg transition 
+    flex items-center gap-2 mx-auto
+    border-green-200 hover:border-green-400"
+  >
+    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+    <span className="text-sm font-medium text-gray-700">
+      {text}
+    </span>
   </div>
 );
