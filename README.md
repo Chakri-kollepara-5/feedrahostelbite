@@ -81,11 +81,11 @@
 
   <table>
     <tr><th>Category</th><th>Technologies</th></tr>
-    <tr><td>Frontend</td><td>React.js, TypeScript, TailwindCSS, React Router</td></tr>
+    <tr><td>Frontend</td><td>React.js, TailwindCSS, React Router</td></tr>
     <tr><td>Backend</td><td>Firebase Auth, Firestore, Real-Time Database</td></tr>
     <tr><td>Design</td><td>TailwindCSS, Lucide Icons</td></tr>
     <tr><td>Payments (HostelBite)</td><td>Razorpay</td></tr>
-    <tr><td>Deployment</td><td>Netlify + Vercel</td></tr>
+    <tr><td>Deployment</td><td>Netlify</td></tr>
   </table>
 </div>
 
