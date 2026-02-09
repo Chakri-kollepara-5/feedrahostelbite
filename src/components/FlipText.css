@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap');
+
+.flip-container {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  font-size: 42px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Flip viewport */
+.flip {
+  height: 64px;              /* ⬅️ BIGGER BOX */
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Stack wrapper */
+.flip > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Each word */
+.flip > div > div {
+  height: 64px;              /* ⬅️ MATCH viewport */
+  padding: 0 28px;           /* horizontal padding only */
+  margin-bottom: 64px;       /* ⬅️ EXACT MATCH */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+  border-radius: 16px;
+
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+
+  transition: transform 0.3s ease;
+}
+
+/* Animation */
+.flip > div:first-child {
+  animation: show 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Color themes */
+.flip div div {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.flip div:first-child div {
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+}
+
+.flip div:last-child div {
+  background: linear-gradient(135deg, #f43f5e, #be123c);
+}
+
+/* PERFECTLY ALIGNED KEYFRAMES */
+@keyframes show {
+  0%   { margin-top: -192px; }  /* 64 × 3 */
+  10%  { margin-top: -128px; }  /* ⬅️ slightly lower */
+  33%  { margin-top: -128px; }
+  43%  { margin-top: -64px; }
+  66%  { margin-top: -64px; }
+  76%  { margin-top: 0; }
+  100% { margin-top: -192px; }
+}
+
+/* Micro delight */
+.flip-container:hover .flip > div > div {
+  transform: scale(1.04);
+}

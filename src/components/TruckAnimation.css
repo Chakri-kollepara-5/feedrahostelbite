@@ -1,0 +1,116 @@
+.truck-wrapper {
+  width: 100%;
+  background: linear-gradient(to bottom, #009688, #00796b);
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.loop-wrapper {
+  position: relative;
+  width: 600px;
+  height: 250px;
+  overflow: hidden;
+  border-bottom: 3px solid #fff;
+}
+
+/* MOUNTAINS */
+.mountain {
+  position: absolute;
+  right: -900px;
+  bottom: -20px;
+  width: 2px;
+  height: 2px;
+  box-shadow:
+    0 0 0 50px #4DB6AC,
+    60px 50px 0 70px #4DB6AC,
+    90px 90px 0 50px #4DB6AC,
+    250px 250px 0 50px #4DB6AC,
+    290px 320px 0 50px #4DB6AC,
+    320px 400px 0 50px #4DB6AC;
+  transform: rotate(130deg);
+  animation: mtn 20s linear infinite;
+}
+
+.hill {
+  position: absolute;
+  right: -900px;
+  bottom: -50px;
+  width: 400px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 50px #4DB6AC,
+    -20px 0 0 20px #4DB6AC,
+    -90px 0 0 50px #4DB6AC,
+    250px 0 0 50px #4DB6AC,
+    290px 0 0 50px #4DB6AC,
+    620px 0 0 50px #4DB6AC;
+  animation: hill 4s linear infinite;
+}
+
+/* TREES */
+.tree {
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  width: 35px;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/tree.svg") no-repeat;
+  animation: tree 3s linear infinite;
+}
+.tree:nth-child(3) { animation-duration: 2s; }
+.tree:nth-child(4) { animation-duration: 8s; }
+
+/* ROCK */
+.rock {
+  position: absolute;
+  bottom: 0;
+  width: 15px;
+  height: 15px;
+  background: #ddd;
+  border-radius: 50%;
+  animation: rock 4s linear infinite;
+}
+
+/* TRUCK */
+.truck {
+  position: absolute;
+  bottom: 15px;
+  right: 50%;
+  width: 85px;
+  height: 60px;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/truck.svg") no-repeat;
+  background-size: contain;
+  animation: truck 4s ease infinite;
+}
+
+.wheels {
+  position: absolute;
+  bottom: 0;
+  right: 50%;
+  width: 85px;
+  height: 15px;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/wheels.svg") no-repeat;
+  animation: truck 4s ease infinite;
+}
+
+/* KEYFRAMES */
+@keyframes tree {
+  0% { transform: translateX(1000px); }
+  100% { transform: translateX(-200px); }
+}
+@keyframes rock {
+  0% { transform: translateX(-200px); }
+  100% { transform: translateX(1200px); }
+}
+@keyframes truck {
+  0% { transform: translateY(0); }
+  10% { transform: translateY(-3px); }
+  20% { transform: translateY(0); }
+}
+@keyframes mtn {
+  100% { transform: translateX(-2000px) rotate(130deg); }
+}
+@keyframes hill {
+  100% { transform: translateX(-2000px); }
+}
