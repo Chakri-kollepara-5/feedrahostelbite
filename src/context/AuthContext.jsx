@@ -37,6 +37,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log('🔥 Auth State Changed:', firebaseUser ? `User: ${firebaseUser.uid}` : 'No User');
+
       if (!firebaseUser) {
         setUser(null);
         setLoading(false);
@@ -45,9 +47,13 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
+        console.log('🔄 Getting ID Token...');
         const idToken = await firebaseUser.getIdToken();
+        console.log('✅ ID Token obtained. Sending to backend...');
+
         // Exchange Firebase Token for Backend JWT + User Data
         const { data } = await API.post('/auth/login', { firebaseToken: idToken });
+        console.log('✅ Backend Login Success:', data);
 
         localStorage.setItem('token', data.token);
         // data.user should contain the user profile from MongoDB
@@ -55,17 +61,23 @@ export const AuthProvider = ({ children }) => {
 
         // Check for new user flag and send email
         if (data.isNewUser) {
+          console.log('📧 New User Detected. Sending Welcome Email...');
           sendWelcomeEmail({
             name: data.name,
             email: data.email,
             userType: data.role
           }).then(sent => {
             if (sent) toast.success("Welcome email sent! 📧");
+            else console.warn('⚠️ Welcome email failed to send');
           });
         }
       } catch (err) {
-        console.error("Backend auth error:", err);
-        toast.error("Authentication failed. Backend error.");
+        console.error("❌ Backend auth error:", err);
+        if (err.response) {
+          console.error("Response Data:", err.response.data);
+          console.error("Response Status:", err.response.status);
+        }
+        toast.error(`Authentication failed: ${err.response?.data?.message || err.message}`);
         setUser(null);
         localStorage.removeItem('token');
       }

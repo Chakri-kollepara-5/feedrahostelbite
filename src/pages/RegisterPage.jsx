@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
+import API from '../services/api';
 import { sendWelcomeEmail } from '../services/emailService';
 import { Mail, Lock, User, Eye, EyeOff, Building, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -72,6 +73,16 @@ export default function RegisterPage() {
         emailVerified: false,
       });
 
+      // Force backend sync to ensure MongoDB user is created
+      try {
+        const token = await user.getIdToken();
+        await API.post('/auth/login', { firebaseToken: token });
+        console.log('✅ Backend sync successful during registration');
+      } catch (apiError) {
+        console.error('⚠️ Backend sync warning:', apiError);
+        // Don't block registration success, AuthContext regarding might pick it up
+      }
+
       toast.success('Account created! Logging in...');
       // Email is now handled by AuthContext via Backend flag
 
@@ -137,6 +148,7 @@ export default function RegisterPage() {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
                   focus:ring-green-500 focus:border-green-500 transition-colors"
                 placeholder="Enter your full name"
+                autoComplete="name"
                 required
               />
             </div>
@@ -155,6 +167,7 @@ export default function RegisterPage() {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 
                   focus:ring-green-500 focus:border-green-500 transition-colors"
                 placeholder="Enter your email"
+                autoComplete="email"
                 required
               />
             </div>
@@ -208,6 +221,7 @@ export default function RegisterPage() {
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg 
                     focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                   placeholder="Enter organization name"
+                  autoComplete="organization"
                 />
               </div>
             </div>
@@ -226,6 +240,7 @@ export default function RegisterPage() {
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg 
                   focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                 placeholder="Create a password"
+                autoComplete="new-password"
                 required
               />
               <button
@@ -251,6 +266,7 @@ export default function RegisterPage() {
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg 
                   focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                 placeholder="Confirm your password"
+                autoComplete="new-password"
                 required
               />
               <button

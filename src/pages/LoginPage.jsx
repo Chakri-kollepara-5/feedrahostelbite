@@ -174,7 +174,7 @@ export default function LoginPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name@company.com"
-                      autoComplete="off" // Prevent browser autofill
+                      autoComplete="username" // Fixed autocomplete
                       className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
                     />
                   </div>
@@ -188,7 +188,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      autoComplete="off" // Prevent browser autofill
+                      autoComplete="current-password" // Fixed autocomplete
                       className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
                     />
                     <button
