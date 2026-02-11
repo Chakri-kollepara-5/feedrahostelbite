@@ -76,7 +76,10 @@ export default function RegisterPage() {
       // Force backend sync to ensure MongoDB user is created
       try {
         const token = await user.getIdToken();
-        await API.post('/auth/login', { firebaseToken: token });
+        await API.post('/auth/login', {
+          firebaseToken: token,
+          createIfMissing: true // Explicitly allow creation
+        });
         console.log('✅ Backend sync successful during registration');
       } catch (apiError) {
         console.error('⚠️ Backend sync warning:', apiError);

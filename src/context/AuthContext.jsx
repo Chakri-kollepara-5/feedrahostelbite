@@ -76,6 +76,16 @@ export const AuthProvider = ({ children }) => {
         if (err.response) {
           console.error("Response Data:", err.response.data);
           console.error("Response Status:", err.response.status);
+
+          // Handle "User Not Found" - specific scenario
+          if (err.response.status === 404) {
+            toast.error("Account does not exist. Please register first.");
+            await signOut(auth); // Force logout from Firebase
+            setUser(null);
+            setLoading(false);
+            localStorage.removeItem('token');
+            return; // Exit early
+          }
         }
         toast.error(`Authentication failed: ${err.response?.data?.message || err.message}`);
         setUser(null);
