@@ -4,7 +4,9 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 // remove db import if not used elsewhere, or keep for other things
@@ -137,6 +139,10 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         resetPassword,
+        googleLogin: async () => {
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+        }
       }}
     >
       {children}

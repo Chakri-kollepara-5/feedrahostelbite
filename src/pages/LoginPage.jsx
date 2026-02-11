@@ -33,7 +33,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false); // Local loading state
   const [currentFeature, setCurrentFeature] = useState(0);
   const navigate = useNavigate();
-  const { login, user } = useAuth(); // Hook
+  const { login, googleLogin, user } = useAuth(); // Hook
 
   // Rotate features
   useEffect(() => {
@@ -218,6 +218,32 @@ export default function LoginPage() {
                 className="w-full py-3.5 bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 active:scale-95"
               >
                 {isSubmitting ? "Signing in..." : <>Sign In <ArrowRight className="h-4 w-4" /></>}
+              </button>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await googleLogin();
+                    toast.success("Welcome back!");
+                  } catch (error) {
+                    console.error(error);
+                    toast.error("Google sign in failed");
+                  }
+                }}
+                className="w-full py-3.5 bg-white border-2 border-gray-100 hover:border-gray-200 text-gray-700 rounded-xl font-bold shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-3 active:scale-95"
+              >
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5 w-5" alt="Google" />
+                Continue with Google
               </button>
 
             </form>
