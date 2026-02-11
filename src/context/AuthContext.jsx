@@ -6,8 +6,9 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../config/firebase';
+import { auth } from '../config/firebase';
+// remove db import if not used elsewhere, or keep for other things
+import API from '../services/api';
 import { sendWelcomeEmail } from '../services/emailService';
 import toast from 'react-hot-toast';
 
@@ -37,80 +38,34 @@ export const AuthProvider = ({ children }) => {
       if (!firebaseUser) {
         setUser(null);
         setLoading(false);
+        localStorage.removeItem('token');
         return;
       }
 
       try {
-        const userRef = doc(db, "users", firebaseUser.uid);
-        const snap = await getDoc(userRef);
+        const idToken = await firebaseUser.getIdToken();
+        // Exchange Firebase Token for Backend JWT + User Data
+        const { data } = await API.post('/auth/login', { firebaseToken: idToken });
 
-        if (snap.exists()) {
-          const data = snap.data();
+        localStorage.setItem('token', data.token);
+        // data.user should contain the user profile from MongoDB
+        setUser(data);
 
-          const profile = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email || "",
-            displayName: data.displayName || "User",
-            userType: data.userType || "volunteer",
-            createdAt: safeDate(data.createdAt),
-          };
-
-          setUser(profile);
-
-          // Detect new users for welcome email
-          const isNew =
-            !data.welcomeEmailSent &&
-            data.createdAt &&
-            Date.now() - safeDate(data.createdAt).getTime() < 60000;
-
-          if (isNew) {
-            try {
-              const sent = await sendWelcomeEmail({
-                name: profile.displayName,
-                email: profile.email,
-                userType: profile.userType,
-              });
-
-              if (sent) {
-                await setDoc(
-                  userRef,
-                  {
-                    ...data,
-                    welcomeEmailSent: true,
-                    welcomeEmailSentAt: new Date(),
-                  },
-                  { merge: true }
-                );
-                toast.success("Welcome email sent! 📧");
-              }
-            } catch (err) {
-              console.error("Welcome email error:", err);
-            }
-          }
-        } else {
-          // Create new user profile
-          const basic = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email || "",
-            displayName: firebaseUser.displayName || "User",
-            userType: "volunteer",
-            createdAt: new Date(),
-            welcomeEmailSent: false,
-          };
-
-          await setDoc(userRef, basic);
-          setUser(basic);
+        // Check for new user flag and send email
+        if (data.isNewUser) {
+          sendWelcomeEmail({
+            name: data.name,
+            email: data.email,
+            userType: data.role
+          }).then(sent => {
+            if (sent) toast.success("Welcome email sent! 📧");
+          });
         }
       } catch (err) {
-        console.error("User profile fetch error:", err);
-
-        setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email || "",
-          displayName: firebaseUser.displayName || "User",
-          userType: "volunteer",
-          createdAt: new Date(),
-        });
+        console.error("Backend auth error:", err);
+        toast.error("Authentication failed. Backend error.");
+        setUser(null);
+        localStorage.removeItem('token');
       }
 
       setLoading(false);
@@ -165,6 +120,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
+    localStorage.removeItem('token');
+    setUser(null);
   };
 
   const resetPassword = async (email) => {

@@ -1,257 +1,112 @@
-import { 
-  collection, 
-  addDoc, 
-  getDocs, 
-  doc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy,
-  getDoc,
-  onSnapshot,
-  serverTimestamp,
-  limit
-} from 'firebase/firestore';
-import { db } from '../config/firebase';
+import API from './api';
 
 /* ------------------ CREATE DONATION ------------------ */
 export const createDonation = async (donationData) => {
   try {
-    console.log('🚀 Creating donation:', donationData);
-    
-    const donation = {
-      ...donationData,
-      status: 'available',
-      createdAt: serverTimestamp(),
-      urgency: donationData.urgency || 'medium',
-      tags: donationData.tags || [],
-    };
-    
-    const docRef = await addDoc(collection(db, 'donations'), donation);
-    console.log('✅ Donation created with ID:', docRef.id);
-    return docRef.id;
-
+    const { data } = await API.post('/donations/create', donationData);
+    return data._id;
   } catch (error) {
-    console.error('❌ Error creating donation:', error);
-    if (error.code === 'permission-denied') {
-      throw new Error('Permission denied. Check Firebase security rules.');
-    }
-    throw new Error('Failed to create donation');
+    console.error('Error creating donation:', error);
+    throw error.response?.data?.message || 'Failed to create donation';
   }
 };
 
 /* ------------------ FETCH DONATIONS ------------------ */
 export const getDonations = async (options = {}) => {
   try {
-    console.log('📊 Fetching donations with options:', options);
+    let queryParams = new URLSearchParams();
 
-    let q = query(collection(db, 'donations'));
-
-    if (options.status && options.status !== 'all') {
-      q = query(q, where('status', '==', options.status));
+    if (options.long && options.lat) {
+      queryParams.append('long', options.long);
+      queryParams.append('lat', options.lat);
+      if (options.distance) queryParams.append('distance', options.distance);
     }
 
-    if (options.userId) {
-      q = query(q, where('donorId', '==', options.userId));
-    }
+    // Pass other generic filters if backend supports them later
+    // For now backend handles 'nearby' or 'all recent' via the same endpoint
 
-    q = query(q, orderBy('createdAt', 'desc'));
-
-    if (options.limitCount) {
-      q = query(q, limit(options.limitCount));
-    }
-
-    const snapshot = await getDocs(q);
-
-    const donations = snapshot.docs.map((docSnap) => {
-      const data = docSnap.data();
-      return {
-        id: docSnap.id,
-        ...data,
-        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-        expiryDate: data.expiryDate?.toDate ? data.expiryDate.toDate() : new Date(),
-        claimedAt: data.claimedAt?.toDate ? data.claimedAt.toDate() : null,
-        completedAt: data.completedAt?.toDate ? data.completedAt.toDate() : null,
-      };
-    });
-
-    console.log('✅ Fetched', donations.length, 'donations');
-    return donations;
-
+    const { data } = await API.get(`/donations/nearby?${queryParams.toString()}`);
+    return data.map(mapDonation);
   } catch (error) {
-    console.error('❌ Error fetching donations:', error);
-    if (error.code === 'permission-denied') {
-      throw new Error('Permission denied. Check Firestore rules.');
-    }
+    console.error('Error fetching donations:', error);
     return [];
   }
 };
 
 /* ------------------ GET USER DONATIONS ------------------ */
 export const getUserDonations = async (userId) => {
-  return getDonations({ userId, limitCount: 10 });
+  // This usually implies "My Donations" in the context of this app's previous logic
+  try {
+    const { data } = await API.get('/donations/my-donations');
+    return data.map(mapDonation);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 /* ------------------ UPDATE DONATION STATUS ------------------ */
-export const updateDonationStatus = async (donationId, status, claimedBy) => {
+export const updateDonationStatus = async (donationId, status) => {
   try {
-    console.log('🔄 Updating donation status:', donationId, '→', status);
-
-    const donationRef = doc(db, 'donations', donationId);
-
-    const updateData = {
-      status,
-      updatedAt: serverTimestamp()
-    };
-
-    if (claimedBy && status === 'claimed') {
-      updateData.claimedBy = claimedBy;
-      updateData.claimedAt = serverTimestamp();
-    }
-
-    if (status === 'completed') {
-      updateData.completedAt = serverTimestamp();
-    }
-
-    await updateDoc(donationRef, updateData);
-    console.log('✅ Donation status updated');
-
+    const { data } = await API.patch(`/donations/${donationId}/status`, { status });
+    return data;
   } catch (error) {
-    console.error('❌ Error updating donation:', error);
-    if (error.code === 'permission-denied') {
-      throw new Error('Permission denied. Check Firestore rules.');
-    }
-    throw new Error('Failed to update donation status');
+    console.error('Error updating status:', error);
+    throw error.response?.data?.message || 'Failed to update status';
   }
 };
 
 /* ------------------ DELETE DONATION ------------------ */
 export const deleteDonation = async (donationId) => {
   try {
-    console.log('🗑️ Deleting donation:', donationId);
-    await deleteDoc(doc(db, 'donations', donationId));
-    console.log('✅ Donation deleted');
-    
+    await API.delete(`/donations/cancel/${donationId}`);
   } catch (error) {
-    console.error('❌ Error deleting donation:', error);
-    throw new Error('Failed to delete donation');
+    console.error('Error deleting donation:', error);
+    throw error.response?.data?.message || 'Failed to delete';
   }
 };
 
-/* ------------------ CLAIM DONATION ------------------ */
+/* ------------------ CLAIM/COMPLETE Wrappers ------------------ */
 export const claimDonation = async (donationId, userId) => {
-  try {
-    console.log('🎯 Claiming donation:', donationId, 'by user:', userId);
-    await updateDonationStatus(donationId, 'claimed', userId);
-    console.log('✅ Donation claimed');
-    
-  } catch (error) {
-    console.error('❌ Error claiming donation:', error);
-    throw new Error('Failed to claim donation');
-  }
+  return updateDonationStatus(donationId, 'ACCEPTED'); // Status flow: POSTED -> ACCEPTED
 };
 
-/* ------------------ COMPLETE DONATION ------------------ */
 export const completeDonation = async (donationId) => {
-  try {
-    console.log('🏁 Completing donation:', donationId);
-    await updateDonationStatus(donationId, 'completed');
-    console.log('✅ Donation completed');
-    
-  } catch (error) {
-    console.error('❌ Error completing donation:', error);
-    throw new Error('Failed to complete donation');
-  }
+  return updateDonationStatus(donationId, 'DELIVERED'); // or PICKED_UP then DELIVERED
 };
 
 /* ------------------ GET SINGLE DONATION ------------------ */
 export const getDonation = async (donationId) => {
   try {
-    console.log('📄 Fetching donation:', donationId);
-
-    const docRef = doc(db, 'donations', donationId);
-    const snap = await getDoc(docRef);
-
-    if (!snap.exists()) {
-      console.log('❌ Donation not found');
-      return null;
-    }
-
-    const data = snap.data();
-
-    return {
-      id: snap.id,
-      ...data,
-      createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-      expiryDate: data.expiryDate?.toDate ? data.expiryDate.toDate() : new Date(),
-      claimedAt: data.claimedAt?.toDate ? data.claimedAt.toDate() : null,
-      completedAt: data.completedAt?.toDate ? data.completedAt.toDate() : null,
-    };
-
+    const { data } = await API.get(`/donations/${donationId}`);
+    return mapDonation(data);
   } catch (error) {
-    console.error('❌ Error fetching donation:', error);
+    console.error('Error getting donation:', error);
     return null;
   }
 };
 
-/* ------------------ REAL-TIME DONATION SUBSCRIPTION ------------------ */
+/* ------------------ REAL-TIME (Simulated) ------------------ */
 export const subscribeToDonations = (callback, errorCallback, filters = {}) => {
-  console.log('🔄 Subscribing to live donations with filters:', filters);
-
-  try {
-    let q = query(collection(db, 'donations'));
-
-    if (filters.status && filters.status !== 'all') {
-      q = query(q, where('status', '==', filters.status));
+  // Polling fallback since we moved to REST
+  const fetchIt = async () => {
+    try {
+      const data = await getDonations(filters);
+      callback(data);
+    } catch (err) {
+      errorCallback(err.message);
     }
+  };
 
-    if (filters.userId) {
-      q = query(q, where('donorId', '==', filters.userId));
-    }
-
-    q = query(q, orderBy('createdAt', 'desc'));
-
-    if (filters.limitCount) {
-      q = query(q, limit(filters.limitCount));
-    }
-
-    return onSnapshot(
-      q,
-      (snapshot) => {
-        console.log('📡 Live update:', snapshot.size, 'donations');
-
-        const donations = snapshot.docs.map((d) => {
-          const data = d.data();
-          return {
-            id: d.id,
-            ...data,
-            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-            expiryDate: data.expiryDate?.toDate ? data.expiryDate.toDate() : new Date(),
-            claimedAt: data.claimedAt?.toDate ? data.claimedAt.toDate() : null,
-            completedAt: data.completedAt?.toDate ? data.completedAt.toDate() : null,
-          };
-        });
-
-        callback(donations);
-      },
-
-      (error) => {
-        console.error('❌ Live subscription error:', error);
-
-        let msg = 'Failed to load donations live.';
-        if (error.code === 'failed-precondition')
-          msg = 'Indexes are being created. Try again later.';
-        if (error.code === 'permission-denied')
-          msg = 'Permission denied. Check Firestore rules.';
-
-        errorCallback(msg);
-      }
-    );
-
-  } catch (error) {
-    console.error('❌ Subscription setup error:', error);
-    errorCallback('Failed to setup real-time updates');
-    return () => {};
-  }
+  fetchIt();
+  const interval = setInterval(fetchIt, 10000); // Poll every 10s
+  return () => clearInterval(interval);
 };
+
+// Helper to map Mongo _id to id for frontend compatibility
+const mapDonation = (d) => ({
+  ...d,
+  id: d._id,
+  createdAt: new Date(d.createdAt),
+  expiryDate: new Date(d.expiryTime || d.createdAt) // expiryTime in backend
+});

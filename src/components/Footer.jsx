@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="bg-green-600 text-white py-6 px-5">
+    <footer className="bg-green-600 text-white pt-6 pb-24 md:py-6 px-5">
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* GRID */}

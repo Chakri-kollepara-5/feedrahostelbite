@@ -72,24 +72,8 @@ export default function RegisterPage() {
         emailVerified: false,
       });
 
-      try {
-        const emailSent = await sendWelcomeEmail({
-          name: formData.name,
-          email: formData.email,
-          userType: formData.userType
-        });
-
-        if (emailSent) {
-          toast.success('Account created! Welcome email sent ');
-        } else {
-          toast.success('Account created!');
-          toast('Welcome email failed to send. Check console.' );
-        }
-      } catch (emailError) {
-        console.error('Email sending failed:', emailError);
-        toast.success('Account created!');
-        toast('Welcome email failed to send.');
-      }
+      toast.success('Account created! Logging in...');
+      // Email is now handled by AuthContext via Backend flag
 
       navigate('/dashboard');
 
@@ -186,11 +170,10 @@ export default function RegisterPage() {
                   <label
                     key={type.value}
                     className={`flex items-center p-3 border-2 rounded-lg cursor-default 
-                    transition-colors ${
-                      formData.userType === type.value
+                    transition-colors ${formData.userType === type.value
                         ? 'border-green-500 bg-green-50'
                         : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <input
                       type="radio"

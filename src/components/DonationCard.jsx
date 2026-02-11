@@ -70,6 +70,19 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
     <Card className="h-full flex flex-col hover:border-primary-200 group">
       <CardContent className="flex-grow p-5 space-y-4">
         {/* Header with Badges */}
+        <div className="relative mb-3">
+          <img
+            src={donation.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
+            alt={donation.foodType}
+            className="w-full h-40 object-cover rounded-xl"
+          />
+          <div className="absolute top-2 right-2 flex gap-1">
+            <Badge variant={getStatusVariant(donation.status)} className="capitalize shadow-sm backdrop-blur-sm bg-white/90">
+              {donation.status}
+            </Badge>
+          </div>
+        </div>
+
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors line-clamp-1 capitalize">
@@ -88,9 +101,7 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
               )}
             </div>
           </div>
-          <Badge variant={getStatusVariant(donation.status)} className="capitalize">
-            {donation.status}
-          </Badge>
+          {/* Badge moved to image overlay */}
         </div>
 
         {/* Description */}
@@ -106,7 +117,11 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
           </div>
           <div className="flex items-center">
             <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-            <span className="truncate">{donation.location}</span>
+            <span className="truncate">
+              {typeof donation.location === 'object'
+                ? donation.location?.formattedAddress || 'Unknown Location'
+                : donation.location}
+            </span>
           </div>
           <div className="flex items-center">
             <Clock className="h-4 w-4 mr-2 text-gray-400" />

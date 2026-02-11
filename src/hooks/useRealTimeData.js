@@ -1,21 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  limit
-} from 'firebase/firestore';
-import { db } from '../config/firebase';
-
-// 🔥 Safe timestamp → JS Date
-const safeDate = (value) => {
-  if (!value) return new Date();
-  if (typeof value.toDate === "function") return value.toDate();
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? new Date() : d;
-};
+import { getDonations, getUserDonations } from '../services/donationService'; // Import Service
 
 export const useRealTimeDonations = (filters = {}) => {
   const [donations, setDonations] = useState([]);
@@ -23,84 +7,57 @@ export const useRealTimeDonations = (filters = {}) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let unsubscribe = null;
+    let isMounted = true;
 
-    const setupListener = () => {
+    const fetchDonations = async () => {
       try {
-        let q = query(collection(db, "donations"));
-
-        const constraints = [];
-
-        if (filters.status && filters.status !== "all") {
-          constraints.push(where("status", "==", filters.status));
-        }
-
+        let data = [];
+        // If filter has userId, fetch user specific donations
         if (filters.userId) {
-          constraints.push(where("donorId", "==", filters.userId));
+          data = await getUserDonations(filters.userId);
+        } else {
+          // Otherwise fetch feed (nearby/all)
+          // We pass filters if needed, but getDonations currently handles location primarily.
+          // We can pass status filter to getDonations if we update it, or filter client-side.
+          // Current backend returns 'POSTED' only for nearby.
+          // Client side filtering in DonationsPage handles visual filtering.
+          data = await getDonations(filters);
         }
 
-        constraints.push(orderBy("createdAt", "desc"));
-
-        if (filters.limit) {
-          constraints.push(limit(filters.limit));
+        if (isMounted) {
+          setDonations(data);
+          setLoading(false);
+          setError(null);
         }
-
-        if (constraints.length > 0) {
-          q = query(collection(db, "donations"), ...constraints);
-        }
-
-        unsubscribe = onSnapshot(
-          q,
-          (snapshot) => {
-            const data = snapshot.docs.map((docItem) => {
-              const d = docItem.data();
-              return {
-                id: docItem.id,
-                ...d,
-                createdAt: safeDate(d.createdAt),
-                expiryDate: safeDate(d.expiryDate),
-                claimedAt: d.claimedAt ? safeDate(d.claimedAt) : null,
-                completedAt: d.completedAt ? safeDate(d.completedAt) : null,
-              };
-            });
-
-            setDonations(data);
-            setLoading(false);
-            setError(null);
-          },
-          (err) => {
-            console.error("Realtime listener error:", err);
-
-            if (err.code === "failed-precondition") {
-              setError("Database index required. Refresh after a moment.");
-            } else if (err.code === "permission-denied") {
-              setError("Permission denied. Check Firebase rules.");
-            } else {
-              setError("Failed to load donations");
-            }
-
-            setLoading(false);
-          }
-        );
       } catch (err) {
-        console.error("Setup error:", err);
-        setError("Failed to setup real-time updates");
-        setLoading(false);
+        console.error("Polling error:", err);
+        if (isMounted) {
+          setError("Failed to load donations");
+          setLoading(false);
+        }
       }
     };
 
-    setupListener();
+    // Initial Fetch
+    fetchDonations();
+
+    // Poll every 5 seconds
+    const interval = setInterval(fetchDonations, 5000);
 
     return () => {
-      if (unsubscribe) unsubscribe();
+      isMounted = false;
+      clearInterval(interval);
     };
-  }, [filters.status, filters.userId, filters.limit]);
+  }, [filters.status, filters.userId]); // Re-run if key filters change
 
   return { donations, loading, error };
 };
 
 // ------------------------------------------------------------
 // 🎯 Real-time Stats Listener (Also Converted to JS)
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// 🎯 Real-time Stats Listener (Backend Polling)
 // ------------------------------------------------------------
 export const useRealTimeStats = () => {
   const [stats, setStats] = useState({
@@ -113,31 +70,58 @@ export const useRealTimeStats = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "donations"), orderBy("createdAt", "desc"));
+    // Dynamically import db to avoid initialization errors if not passed
+    let unsubscribe = () => { };
 
-    const unsub = onSnapshot(
-      q,
-      (snapshot) => {
-        const data = snapshot.docs.map((d) => d.data());
-        const foodSaved = data.reduce((sum, d) => sum + (d.quantity || 0), 0);
-        const donors = new Set(data.map((d) => d.donorId)).size;
+    const setupListener = async () => {
+      try {
+        const { db } = await import('../firebaseConfig');
+        const { collection, onSnapshot, query, where } = await import('firebase/firestore');
 
-        setStats({
-          totalDonations: data.length,
-          totalFoodSaved: Math.round(foodSaved),
-          activeDonors: donors,
-          co2Saved: Math.round(foodSaved * 2.3),
+        // Listen to all non-cancelled donations for stats
+        // If the collection is huge, this is expensive (reads = N). 
+        // For a hackathon/demo scale, it's fine and gives "real-time matching data".
+        const q = query(collection(db, "donations"));
+
+        unsubscribe = onSnapshot(q, (snapshot) => {
+          let totalDonations = 0;
+          let totalFoodSaved = 0;
+          let uniqueDonors = new Set();
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            totalDonations++;
+            if (data.quantity) {
+              totalFoodSaved += Number(data.quantity);
+            }
+            if (data.donorId) {
+              uniqueDonors.add(data.donorId);
+            }
+          });
+
+          setStats({
+            totalDonations,
+            totalFoodSaved: Math.round(totalFoodSaved),
+            activeDonors: uniqueDonors.size,
+            co2Saved: Math.round(totalFoodSaved * 2.5), // Approx factor
+          });
+          setLoading(false);
+        }, (error) => {
+          console.error("Stats listener error:", error);
+          setLoading(false);
         });
 
-        setLoading(false);
-      },
-      (err) => {
-        console.error("Stats error:", err);
+      } catch (err) {
+        console.error("Failed to setup real-time stats:", err);
         setLoading(false);
       }
-    );
+    };
 
-    return () => unsub();
+    setupListener();
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return { stats, loading };

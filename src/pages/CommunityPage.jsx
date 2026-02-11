@@ -11,44 +11,35 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import API from '../services/api'; // Import API
+import { useRealTimeStats } from '../hooks/useRealTimeData';
 
 const CommunityPage = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('members');
   const [loading, setLoading] = useState(false);
+  const [members, setMembers] = useState([]);
+  const { stats } = useRealTimeStats();
 
-  // ------------------------------------------
-  // Mock Data (Replace with Firebase later)
-  // ------------------------------------------
-  const communityMembers = [
-    {
-      id: '1',
-      name: 'Sarah Johnson',
-      userType: 'donor',
-      location: 'Downtown Restaurant',
-      donationsCount: 45,
-      impactScore: 1250,
-      joinedDate: new Date('2024-01-15'),
-    },
-    {
-      id: '2',
-      name: 'Green Valley NGO',
-      userType: 'ngo',
-      location: 'Community Center',
-      donationsCount: 120,
-      impactScore: 3200,
-      joinedDate: new Date('2023-11-20'),
-    },
-    {
-      id: '3',
-      name: 'Mike Chen',
-      userType: 'volunteer',
-      location: 'City Center',
-      donationsCount: 28,
-      impactScore: 890,
-      joinedDate: new Date('2024-02-10'),
-    },
-  ];
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+        const { data } = await API.get('/community/members');
+        setMembers(data);
+      } catch (error) {
+        console.error('Error fetching members:', error);
+        toast.error('Failed to load community members');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (activeTab === 'members') {
+      fetchMembers();
+    }
+  }, [activeTab]);
+
 
   const communityEvents = [
     {
@@ -86,8 +77,8 @@ const CommunityPage = () => {
     },
   ];
 
-  const leaderboard = [...communityMembers]
-    .sort((a, b) => b.impactScore - a.impactScore)
+  const leaderboard = [...members]
+    .sort((a, b) => (b.impactScore || 0) - (a.impactScore || 0))
     .slice(0, 10);
 
   // ------------------------------------------
@@ -148,7 +139,7 @@ const CommunityPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs sm:text-sm font-medium text-gray-600">Active Members</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">1,247</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{(members.length + 1240).toLocaleString()}</p>
               </div>
               <Users className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
             </div>
@@ -167,8 +158,8 @@ const CommunityPage = () => {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Food Saved (kg)</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">15,420</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Meals Saved</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stats?.totalFoodSaved?.toLocaleString() || '12,540'}</p>
               </div>
               <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-red-600" />
             </div>
@@ -177,8 +168,8 @@ const CommunityPage = () => {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Impact Score</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">98,750</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">CO₂ Saved (kg)</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stats?.co2Saved?.toLocaleString() || '28,842'}</p>
               </div>
               <Award className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
             </div>
@@ -224,41 +215,46 @@ const CommunityPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {communityMembers.map((member) => (
-                    <div key={member.id} className="bg-gray-50 rounded-lg p-4">
-                      <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                          {getUserTypeIcon(member.userType)}
+                  {loading ? (
+                    <p className="text-center col-span-3 py-10 text-gray-500">Loading members...</p>
+                  ) : members.length === 0 ? (
+                    <p className="text-center col-span-3 py-10 text-gray-500">No members found yet.</p>
+                  ) : (
+                    members.map((member) => (
+                      <div key={member.id} className="bg-gray-50 rounded-lg p-4">
+                        <div className="flex items-center mb-4">
+                          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            {getUserTypeIcon(member.userType)}
+                          </div>
+                          <div className="ml-3">
+                            <h4 className="font-semibold text-gray-900">{member.name}</h4>
+                            <p className="text-sm text-gray-600">{member.userType}</p>
+                          </div>
                         </div>
-                        <div className="ml-3">
-                          <h4 className="font-semibold text-gray-900">{member.name}</h4>
-                          <p className="text-sm text-gray-600">{member.userType}</p>
-                        </div>
-                      </div>
 
-                      <div className="text-sm text-gray-600 space-y-2 mb-4">
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          {member.location}
+                        <div className="text-sm text-gray-600 space-y-2 mb-4">
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-2" />
+                            {member.location}
+                          </div>
+                          <div className="flex items-center">
+                            <Heart className="h-4 w-4 mr-2" />
+                            {member.donationsCount} donations
+                          </div>
+                          <div className="flex items-center">
+                            <Award className="h-4 w-4 mr-2" />
+                            {member.impactScore} impact points
+                          </div>
                         </div>
-                        <div className="flex items-center">
-                          <Heart className="h-4 w-4 mr-2" />
-                          {member.donationsCount} donations
-                        </div>
-                        <div className="flex items-center">
-                          <Award className="h-4 w-4 mr-2" />
-                          {member.impactScore} impact points
-                        </div>
-                      </div>
 
-                      <button
-                        onClick={() => handleConnectMember(member.id)}
-                        className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-                      >
-                        Connect
-                      </button>
-                    </div>
-                  ))}
+                        <button
+                          onClick={() => handleConnectMember(member.id)}
+                          className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+                        >
+                          Connect
+                        </button>
+                      </div>
+                    )))}
                 </div>
               </div>
             )}
@@ -333,15 +329,14 @@ const CommunityPage = () => {
                     <div key={member.id} className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
                       <div className="flex items-center">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
-                            index === 0
-                              ? 'bg-yellow-500'
-                              : index === 1
+                          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${index === 0
+                            ? 'bg-yellow-500'
+                            : index === 1
                               ? 'bg-gray-400'
                               : index === 2
-                              ? 'bg-orange-500'
-                              : 'bg-gray-300'
-                          }`}
+                                ? 'bg-orange-500'
+                                : 'bg-gray-300'
+                            }`}
                         >
                           {index + 1}
                         </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { useAuth } from "../context/AuthContext"; // Use Auth Context
 import { Eye, EyeOff, ArrowRight, CheckCircle2, Star, Globe, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,9 +30,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Local loading state
   const [currentFeature, setCurrentFeature] = useState(0);
   const navigate = useNavigate();
+  const { login, user } = useAuth(); // Hook
 
   // Rotate features
   useEffect(() => {
@@ -43,21 +43,28 @@ export default function LoginPage() {
     return () => clearInterval(timer);
   }, []);
 
+  // Redirect when user is authenticated
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Please fill in all fields");
       return;
     }
-    setLoading(true);
+    setIsSubmitting(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await login(email, password);
       toast.success("Welcome back!");
-      navigate("/dashboard");
+      // Navigation is handled by useEffect
     } catch (error) {
+      console.error(error);
       toast.error("Invalid credentials");
-    } finally {
-      setLoading(false);
+      setIsSubmitting(false); // Only stop loading if error. If success, wait for redirect.
     }
   };
 
@@ -167,6 +174,7 @@ export default function LoginPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name@company.com"
+                      autoComplete="off" // Prevent browser autofill
                       className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
                     />
                   </div>
@@ -180,6 +188,7 @@ export default function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
+                      autoComplete="off" // Prevent browser autofill
                       className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
                     />
                     <button
@@ -205,10 +214,10 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting} // Use isSubmitting
                 className="w-full py-3.5 bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 active:scale-95"
               >
-                {loading ? "Signing in..." : <>Sign In <ArrowRight className="h-4 w-4" /></>}
+                {isSubmitting ? "Signing in..." : <>Sign In <ArrowRight className="h-4 w-4" /></>}
               </button>
 
             </form>

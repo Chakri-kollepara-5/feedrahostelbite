@@ -7,8 +7,8 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { db } from "../config/firebase";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+// Removed direct firebase imports
+import { createDonation } from "../services/donationService";
 import toast from "react-hot-toast";
 import "./CreateDonationModal.css";
 
@@ -110,37 +110,35 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      // 🔥 THIS IS THE FIX
-      await addDoc(collection(db, "donations"), {
+      // Construction donation object for Backend API
+      const donationPayload = {
         foodType: formData.foodType.toLowerCase(),
         description: formData.description,
         quantity: qty,
         location: formData.location,
+        expiryTime: expiry.toISOString(), // Backend expects ISO string or Date
 
-        // ✅ REQUIRED FOR UI
-        status: "available",
-        createdAt: Timestamp.now(),
-        expiryDate: Timestamp.fromDate(expiry),
+        // Backend handles status, createdAt, etc.
+        // We might need to send donorId if backend doesn't take it from token (it usually does from req.user)
+        // But let's send it to be safe if the schema requires it from body, 
+        // OR rely on backend `req.user._id` which is safer.
+        // Looking at backend `createDonation` controller:
+        // `const { ... } = req.body; ... donorId: req.user._id`
+        // So we don't need to send donorId in body! 
 
-        donorId: user.uid,
-        donorName:
-          user.displayName || user.email?.split("@")[0] || "Anonymous",
         contactInfo: formData.contactInfo,
-
         urgency: formData.urgency,
         tags: formData.tags,
         pickupInstructions: formData.pickupInstructions,
+      };
 
-        claimedBy: null,
-        claimedAt: null,
-        completedAt: null,
-      });
+      await createDonation(donationPayload);
 
       toast.success("Donation created successfully!");
       onSuccess();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create donation");
+      toast.error(typeof err === 'string' ? err : "Failed to create donation");
     } finally {
       setLoading(false);
     }
@@ -257,11 +255,10 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
                   type="button"
                   key={tag}
                   onClick={() => handleTagToggle(tag)}
-                  className={`px-3 py-2 rounded-full text-sm ${
-                    formData.tags.includes(tag)
+                  className={`px-3 py-2 rounded-full text-sm ${formData.tags.includes(tag)
                       ? "bg-green-500 text-white"
                       : "bg-gray-100"
-                  }`}
+                    }`}
                 >
                   {tag}
                 </button>

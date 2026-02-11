@@ -2,9 +2,9 @@ import emailjs from '@emailjs/browser';
 
 // EmailJS Configuration
 const EMAILJS_CONFIG = {
-  serviceId: 'service_vohavhh',
-  templateId: 'template_ika8wzo',
-  publicKey: 'jiM9CZ-dCLtb6rTlf'
+  serviceId: 'service_yf76doq',
+  templateId: 'template_vn9qy4b',
+  publicKey: 'JyYK-zQkdAL7EXvrW'
 };
 
 // Initialize EmailJS
@@ -47,12 +47,18 @@ export const sendWelcomeEmail = async (userData) => {
     const templateParams = {
       to_name: name,
       to_email: email,
+      // Add variations to catch whatever variable the template uses for "To Email"
+      email: email,
+      recipient: email,
+      reply_to: email,
+
       user_type: userType || 'volunteer',
       from_name: "Feedra Team",
       message: `Welcome to Feedra! We're thrilled to have you join our Food Saver Network. As a ${userType || 'volunteer'}, your contribution helps reduce food waste and support communities in India!`
     };
 
     console.log('📧 Template params:', templateParams);
+    console.log('🔧 Using EmailJS Service:', EMAILJS_CONFIG.serviceId); // Debug Log
 
     const response = await emailjs.send(
       EMAILJS_CONFIG.serviceId,
