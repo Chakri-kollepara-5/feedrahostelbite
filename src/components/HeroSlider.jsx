@@ -111,6 +111,41 @@ const HeroSlider = () => {
           {/* CONTENT */}
           <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
 
+            {/* 🔗 TOP ACCOUNT LINKS */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8 }}
+              className="
+                mb-10
+                px-6 py-2
+                rounded-full 
+                bg-white/10 
+                backdrop-blur-md 
+                border border-white/20 
+                text-sm md:text-base 
+                text-white/95
+                shadow-2xl
+                flex items-center gap-2
+              "
+            >
+              <span>Already have an account?</span>
+              <button
+                onClick={() => navigate("/login")}
+                className="text-emerald-300 font-bold hover:text-emerald-200 transition-colors"
+              >
+                Login
+              </button>
+              <span className="opacity-50">•</span>
+              <span>New here?</span>
+              <button
+                onClick={() => navigate("/register")}
+                className="text-emerald-300 font-bold hover:text-emerald-200 transition-colors"
+              >
+                Create an account
+              </button>
+            </motion.div>
+
             {/* 🔥 BIG PREMIUM HERO TITLE */}
             <motion.h1
               key={`title-${index}`}
@@ -219,9 +254,6 @@ max-w-5xl
 
             </div>
 
-            <p className="mt-6 text-sm text-white/90 drop-shadow">
-              Already have an account? Login • New here? Create an account
-            </p>
 
           </div>
         </motion.div>
@@ -233,11 +265,10 @@ max-w-5xl
           <button
             key={i}
             onClick={() => setIndex(i)}
-            className={`h-3 rounded-full transition-all duration-300 ${
-              index === i
-                ? "bg-emerald-400 w-8 shadow-lg shadow-emerald-500/40"
-                : "bg-white/50 hover:bg-white/80 w-3"
-            }`}
+            className={`h-3 rounded-full transition-all duration-300 ${index === i
+              ? "bg-emerald-400 w-8 shadow-lg shadow-emerald-500/40"
+              : "bg-white/50 hover:bg-white/80 w-3"
+              }`}
           />
         ))}
       </div>

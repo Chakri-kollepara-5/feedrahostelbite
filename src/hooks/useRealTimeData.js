@@ -54,73 +54,54 @@ export const useRealTimeDonations = (filters = {}) => {
 };
 
 // ------------------------------------------------------------
-// 🎯 Real-time Stats Listener (Also Converted to JS)
-// ------------------------------------------------------------
-// ------------------------------------------------------------
-// 🎯 Real-time Stats Listener (Backend Polling)
+// 🎯 Real-time Stats Listener (Backend Polling - MongoDB)
 // ------------------------------------------------------------
 export const useRealTimeStats = () => {
   const [stats, setStats] = useState({
     totalDonations: 0,
     totalFoodSaved: 0,
     activeDonors: 0,
+    mealsProvided: 0,
     co2Saved: 0,
   });
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Dynamically import db to avoid initialization errors if not passed
-    let unsubscribe = () => { };
+    let isMounted = true;
 
-    const setupListener = async () => {
+    const fetchStats = async () => {
       try {
-        const { db } = await import('../firebaseConfig');
-        const { collection, onSnapshot, query, where } = await import('firebase/firestore');
+        const { default: API } = await import('../services/api');
+        const { data } = await API.get('/stats/impact');
 
-        // Listen to all non-cancelled donations for stats
-        // If the collection is huge, this is expensive (reads = N). 
-        // For a hackathon/demo scale, it's fine and gives "real-time matching data".
-        const q = query(collection(db, "donations"));
-
-        unsubscribe = onSnapshot(q, (snapshot) => {
-          let totalDonations = 0;
-          let totalFoodSaved = 0;
-          let uniqueDonors = new Set();
-
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            totalDonations++;
-            if (data.quantity) {
-              totalFoodSaved += Number(data.quantity);
-            }
-            if (data.donorId) {
-              uniqueDonors.add(data.donorId);
-            }
-          });
-
+        if (isMounted) {
           setStats({
-            totalDonations,
-            totalFoodSaved: Math.round(totalFoodSaved),
-            activeDonors: uniqueDonors.size,
-            co2Saved: Math.round(totalFoodSaved * 2.5), // Approx factor
+            totalDonations: data.totalDonations || 0,
+            totalFoodSaved: data.totalFoodSaved || 0,
+            activeDonors: data.activeDonors || 0,
+            mealsProvided: data.mealsProvided || 0,
+            co2Saved: data.co2Saved || 0,
           });
           setLoading(false);
-        }, (error) => {
-          console.error("Stats listener error:", error);
+        }
+      } catch (error) {
+        console.error('Stats fetch error:', error);
+        if (isMounted) {
           setLoading(false);
-        });
-
-      } catch (err) {
-        console.error("Failed to setup real-time stats:", err);
-        setLoading(false);
+        }
       }
     };
 
-    setupListener();
+    // Initial fetch
+    fetchStats();
+
+    // Poll every 10 seconds for real-time updates
+    const interval = setInterval(fetchStats, 10000);
 
     return () => {
-      unsubscribe();
+      isMounted = false;
+      clearInterval(interval);
     };
   }, []);
 

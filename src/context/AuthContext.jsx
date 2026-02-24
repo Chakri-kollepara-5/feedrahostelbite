@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
+        // Optimized: Get token and make API call in parallel preparation
         console.log('🔄 Getting ID Token...');
         const idToken = await firebaseUser.getIdToken();
         console.log('✅ ID Token obtained. Sending to backend...');
@@ -55,13 +56,15 @@ export const AuthProvider = ({ children }) => {
         const { data } = await API.post('/auth/login', { firebaseToken: idToken });
         console.log('✅ Backend Login Success:', data);
 
+        // Set token and user state immediately for faster UI response
         localStorage.setItem('token', data.token);
-        // data.user should contain the user profile from MongoDB
         setUser(data);
+        setLoading(false); // Set loading false immediately after user data is available
 
-        // Check for new user flag and send email
+        // Handle welcome email asynchronously (non-blocking)
         if (data.isNewUser) {
           console.log('📧 New User Detected. Sending Welcome Email...');
+          // Fire and forget - don't block the login flow
           sendWelcomeEmail({
             name: data.name,
             email: data.email,
@@ -69,30 +72,23 @@ export const AuthProvider = ({ children }) => {
           }).then(sent => {
             if (sent) toast.success("Welcome email sent! 📧");
             else console.warn('⚠️ Welcome email failed to send');
-          });
+          }).catch(err => console.warn('⚠️ Welcome email error:', err));
         }
       } catch (err) {
         console.error("❌ Backend auth error:", err);
-        if (err.response) {
-          console.error("Response Data:", err.response.data);
-          console.error("Response Status:", err.response.status);
 
-          // Handle "User Not Found" - specific scenario
-          if (err.response.status === 404) {
-            toast.error("Account does not exist. Please register first.");
-            await signOut(auth); // Force logout from Firebase
-            setUser(null);
-            setLoading(false);
-            localStorage.removeItem('token');
-            return; // Exit early
-          }
+        // Handle "User Not Found" - specific scenario
+        if (err.response?.status === 404) {
+          toast.error("Account does not exist. Please register first.");
+          await signOut(auth); // Force logout from Firebase
+        } else {
+          toast.error(`Authentication failed: ${err.response?.data?.message || err.message}`);
         }
-        toast.error(`Authentication failed: ${err.response?.data?.message || err.message}`);
+
         setUser(null);
+        setLoading(false);
         localStorage.removeItem('token');
       }
-
-      setLoading(false);
     });
 
     return unsub;

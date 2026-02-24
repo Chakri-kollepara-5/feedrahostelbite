@@ -1,16 +1,15 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { Utensils, Leaf, Scale } from 'lucide-react';
 import { useRealTimeStats } from '../../hooks/useRealTimeData';
 
+
 const ImpactStats = () => {
     const { stats } = useRealTimeStats();
     const totalKg = stats?.totalFoodSaved || 0;
+    const meals = stats?.mealsProvided || 0;
+    const co2 = stats?.co2Saved || 0;
 
-    const derivedStats = useMemo(() => ({
-        meals: Math.round(totalKg * 3),
-        co2: Math.round(totalKg * 2.3)
-    }), [totalKg]);
 
     return (
         <div className="w-full bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
@@ -34,7 +33,7 @@ const ImpactStats = () => {
                     delay={0.1}
                 />
                 <SimpleStat
-                    value={derivedStats.meals}
+                    value={meals}
                     label="Meals Provided"
                     unit=""
                     icon={Utensils}
@@ -43,7 +42,7 @@ const ImpactStats = () => {
                     delay={0.2}
                 />
                 <SimpleStat
-                    value={derivedStats.co2}
+                    value={co2}
                     label="CO₂ Saved"
                     unit="kg"
                     icon={Leaf}
