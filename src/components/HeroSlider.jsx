@@ -109,7 +109,7 @@ const HeroSlider = () => {
           <div className="absolute inset-0 bg-black/65 backdrop-blur-[1px]" />
 
           {/* CONTENT */}
-          <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
+          <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 pb-20 md:pb-32">
 
             {/* 🔗 TOP ACCOUNT LINKS */}
             <motion.div
@@ -193,23 +193,22 @@ const HeroSlider = () => {
               initial="hidden"
               animate="visible"
               className="
-text-4xl
-sm:text-5xl
-md:text-6xl
-lg:text-7xl
+                text-2xl
+                sm:text-3xl
+                md:text-4xl
+                lg:text-5xl
 
-font-extrabold
-tracking-tight
-leading-[1.1]
+                font-extrabold
+                tracking-tight
+                leading-[1.1]
 
-text-white
+                text-white
 
-drop-shadow-[0_8px_25px_rgba(0,0,0,0.7)]
+                drop-shadow-[0_8px_25px_rgba(0,0,0,0.7)]
 
-mb-6
-max-w-5xl
-"
-
+                mb-6
+                max-w-5xl
+              "
             >
               {slides[index].subtitle}
             </motion.p>
