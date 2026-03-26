@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-import API from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, User, Eye, EyeOff, Building, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -20,6 +20,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { syncUser } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -62,18 +63,13 @@ export default function RegisterPage() {
         displayName: formData.name,
       });
 
-      // 1. Sync with backend in background (fire and forget)
-      user.getIdToken().then(token => {
-          API.post('/auth/login', {
-            firebaseToken: token,
-            createIfMissing: true,
-            userType: formData.userType,
-            organization: formData.organization,
-            name: formData.name
-          }).then(({ data }) => {
-              if (data.token) localStorage.setItem('token', data.token);
-          }).catch(apiError => console.error('⚠️ Backend sync warning:', apiError));
-      });
+      // 1. Sync with backend through AuthContext
+      // This ensures the global 'user' state is updated and metadata is saved
+      syncUser(user, {
+        userType: formData.userType,
+        organization: formData.organization,
+        name: formData.name
+      }).catch(err => console.error('⚠️ Registration sync failure:', err));
 
       // 2. Set Firestore record in background (fire and forget)
       setDoc(doc(db, 'users', user.uid), {

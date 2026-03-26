@@ -28,12 +28,71 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false); // Track active sync to prevent redundancy
 
-  // Safe Firestore Timestamp → JS Date
-  const safeDate = (value) => {
-    if (!value) return new Date();
-    if (typeof value.toDate === "function") return value.toDate();
-    const d = new Date(value);
-    return isNaN(d.getTime()) ? new Date() : d;
+  /**
+   * Centralized Sync Method
+   * Exchanging Firebase Token for Backend JWT + User Profile
+   */
+  const syncUser = async (firebaseUser, metadata = {}) => {
+    if (!firebaseUser) return;
+    
+    // 1. Prevent overlapping syncs
+    if (isSyncing) {
+      console.log('⏳ Sync already in progress, skipping...');
+      return;
+    }
+
+    try {
+      setIsSyncing(true);
+      console.log('🔄 Syncing user with backend...', metadata);
+      
+      const idToken = await firebaseUser.getIdToken();
+      
+      // We pass createIfMissing: true by default to ensure sync
+      const { data } = await API.post('/auth/login', { 
+          firebaseToken: idToken,
+          createIfMissing: true,
+          ...metadata // userType, organization, phone, name
+      });
+      
+      console.log('✅ Backend Sync Success:', data);
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+      
+      setUser(data);
+      setIsSyncing(false);
+
+      // Handle welcome email asynchronously (non-blocking)
+      if (data.isNewUser) {
+        sendWelcomeEmail({
+          name: data.name,
+          email: data.email,
+          userType: data.role
+        }).catch(err => console.warn('⚠️ Welcome email error:', err));
+      }
+
+      return data;
+    } catch (err) {
+      console.error("❌ Backend sync error:", err);
+      setIsSyncing(false);
+      
+      if (err.response?.status === 404) {
+        toast.error("Account does not exist. Please register first.");
+        await signOut(auth);
+      } else {
+        const msg = err.response?.data?.message || err.message;
+        console.warn(`⚠️ Sync failure: ${msg}`);
+      }
+      
+      // If we don't have a user, ensure we clear state
+      if (!user) {
+        setUser(null);
+        localStorage.removeItem('token');
+      }
+      
+      throw err;
+    }
   };
 
   useEffect(() => {
@@ -56,51 +115,12 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        if (isSyncing) {
-            console.log('⏳ Sync already in progress, skipping...');
-            return;
-        }
-
-        setIsSyncing(true);
-        console.log('🔄 Getting ID Token...');
-        const idToken = await firebaseUser.getIdToken();
-        
-        // Exchange Firebase Token for Backend JWT + User Data
-        // We pass createIfMissing: true by default to ensure sync
-        const { data } = await API.post('/auth/login', { 
-            firebaseToken: idToken,
-            createIfMissing: true 
-        });
-        
-        console.log('✅ Backend Login Success:', data);
-
-        localStorage.setItem('token', data.token);
-        setUser(data);
+        // 2. Perform background sync
+        await syncUser(firebaseUser);
         setLoading(false);
-        setIsSyncing(false);
-
-        // Handle welcome email asynchronously (non-blocking)
-        if (data.isNewUser) {
-          sendWelcomeEmail({
-            name: data.name,
-            email: data.email,
-            userType: data.role
-          }).catch(err => console.warn('⚠️ Welcome email error:', err));
-        }
       } catch (err) {
-        console.error("❌ Backend auth error:", err);
-        setIsSyncing(false);
-        
-        if (err.response?.status === 404) {
-          toast.error("Account does not exist. Please register first.");
-          await signOut(auth);
-        } else {
-          // toast.error(`Authentication failed: ${err.response?.data?.message || err.message}`);
-        }
-
-        setUser(null);
+        console.warn('⚠️ Background sync failed:', err.message);
         setLoading(false);
-        localStorage.removeItem('token');
       }
     });
 
@@ -170,6 +190,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         resetPassword,
+        syncUser,
         googleLogin: async () => {
           const provider = new GoogleAuthProvider();
           await signInWithPopup(auth, provider);
