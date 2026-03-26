@@ -62,9 +62,19 @@ export default function LoginPage() {
       toast.success("Welcome back!");
       // Navigation is handled by useEffect
     } catch (error) {
-      console.error(error);
-      toast.error("Invalid credentials");
-      setIsSubmitting(false); // Only stop loading if error. If success, wait for redirect.
+      console.error("🔑 Login Error:", error);
+      
+      let message = "Invalid credentials";
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        message = "Incorrect password or email. Please try again.";
+      } else if (error.code === 'auth/user-not-found') {
+        message = "No account found with this email.";
+      } else if (error.code === 'auth/too-many-requests') {
+        message = "Too many failed attempts. Please try again later.";
+      }
+      
+      toast.error(message);
+      setIsSubmitting(false);
     }
   };
 
