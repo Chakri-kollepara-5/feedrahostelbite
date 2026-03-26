@@ -3,9 +3,9 @@ import { Plus, Search, Filter, MapPin, Clock, Zap, RefreshCw, AlertCircle } from
 import { useAuth } from '../context/AuthContext';
 import { useRealTimeDonations } from '../hooks/useRealTimeData';
 import { claimDonation } from '../services/donationService';
-import DonationCard from '../components/DonationCard';
-import LiveStats from '../components/LiveStats';
-import CreateDonationModal from '../components/CreateDonationModal';
+import DonationCard from '../DonationCard';
+import LiveStats from '../LiveStats';
+import CreateDonationModal from '../CreateDonationModal';
 import toast from 'react-hot-toast';
 
 export default function DonationsPage() {

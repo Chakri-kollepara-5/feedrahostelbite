@@ -23,12 +23,13 @@ import CommunityPage from "./pages/CommunityPage";
 import SettingsPage from "./pages/SettingsPage";
 import HostelBitePage from "./pages/HostelBitePage";
 import PaymentsPage from "./pages/PaymentsPage";
+import AgentDashboard from "./components/AgentDashboard";
 
 // Components
-import Navigation from "./components/Navigation";
-import ChatAssistButton from "./components/ChatAssistButtonwhatsapp";
-import Footer from "./components/Footer";
-import IntroSplash from "./components/IntroSplash";
+import Navigation from "./Navigation";
+import ChatAssistButton from "./ChatAssistButtonwhatsapp";
+import Footer from "./Footer";
+import IntroSplash from "./IntroSplash";
 
 /* ---------------- ROUTE GUARDS ---------------- */
 
@@ -88,10 +89,14 @@ function AppContent() {
         <Route path="/" element={<LandingPage />} />
 
         {/* AUTH PAGES */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
         <Route
           path="/register"
           element={
@@ -100,7 +105,6 @@ function AppContent() {
             </PublicRoute>
           }
         />
-
         <Route
           path="/reset-password"
           element={
@@ -134,6 +138,15 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <DonationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/agent-dashboard"
+          element={
+            <ProtectedRoute>
+              <AgentDashboard />
             </ProtectedRoute>
           }
         />

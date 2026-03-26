@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRealTimeStats } from '../hooks/useRealTimeData';
+import { useRealTimeStats } from './hooks/useRealTimeData';
 
 const LiveStats = () => {
   const { stats, loading } = useRealTimeStats();

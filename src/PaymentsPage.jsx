@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { subscribeToPayments, createPayment } from '../services/payments';
+import { subscribeToPayments, createPayment } from './services/payments';
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([]);

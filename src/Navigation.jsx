@@ -10,8 +10,9 @@ import {
   Menu,
   X,
   Utensils,
+  Bot
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import RealTimeNotifications from './RealTimeNotifications';
 import toast from 'react-hot-toast';
 
@@ -38,6 +39,7 @@ const Navigation = () => {
     { path: '/hostelbite', icon: Utensils, label: 'HostelBite' },
     { path: '/analytics', icon: BarChart3, label: 'Analytics', adminOnly: true },
     { path: '/community', icon: Users, label: 'Community' },
+    { path: '/agent-dashboard', icon: Bot, label: 'AI Engine', adminOnly: true },
     { path: '/settings', icon: Settings, label: 'Settings' },
   ];
 

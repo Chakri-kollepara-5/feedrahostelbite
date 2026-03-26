@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Bell, X, Package, Users, Heart } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import { collection, onSnapshot, query, where, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from './config/firebase';
 import toast from 'react-hot-toast';
 
 const RealTimeNotifications = () => {

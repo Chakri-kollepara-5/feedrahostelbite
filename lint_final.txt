@@ -1,0 +1,158 @@
+﻿
+C:\FEEDRA-FULLSTACK\feedraanti\src\Footer.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\HeroSlider.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\HostelMealBooking.jsx
+    3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+   15:9   error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   no-unused-vars
+  259:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  257 |         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black pointer-events-none" />
+  258 |
+> 259 |         <MealContent isExpanded={false} />
+      |          ^^^^^^^^^^^ This component is created during render
+  260 |       </div>
+  261 |
+  262 |       {/* Focus Mode Overlay */}
+
+   81 |
+   82 |   // Reusable Content for consistency between Normal and Focused views
+>  83 |   const MealContent = ({ isExpanded }) => (
+      |                       ^^^^^^^^^^^^^^^^^^^^^
+>  84 |     <div className={`grid grid-cols-1 ${isExpanded ? 'lg:grid-cols-2 gap-12' : 'lg:grid-cols-2'} relative z-20 h-full`}>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  85 |
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 248 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 249 |   );
+      | ^^^^ The component is created during render here
+  250 |
+  251 |   return (
+  252 |     <>  react-hooks/static-components
+  294:18  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  292 |
+  293 |               <div className="flex-1 overflow-hidden">
+> 294 |                 <MealContent isExpanded={true} />
+      |                  ^^^^^^^^^^^ This component is created during render
+  295 |               </div>
+  296 |             </motion.div>
+  297 |           </motion.div>
+
+   81 |
+   82 |   // Reusable Content for consistency between Normal and Focused views
+>  83 |   const MealContent = ({ isExpanded }) => (
+      |                       ^^^^^^^^^^^^^^^^^^^^^
+>  84 |     <div className={`grid grid-cols-1 ${isExpanded ? 'lg:grid-cols-2 gap-12' : 'lg:grid-cols-2'} relative z-20 h-full`}>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  85 |
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 248 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 249 |   );
+      | ^^^^ The component is created during render here
+  250 |
+  251 |   return (
+  252 |     <>                                                                              react-hooks/static-components
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\IntroSplash.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\components\AgentDashboard.jsx
+   3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                no-unused-vars
+  15:9   error  'statusStyle' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\context\AuthContext.jsx
+   20:14  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+   32:9   error    'safeDate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                        no-unused-vars
+  108:6   warning  React Hook useEffect has missing dependencies: 'isSyncing' and 'user'. Either include them or remove the dependency array       react-hooks/exhaustive-deps
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\dashboard\DonationList.jsx
+  6:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\dashboard\HeroSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\dashboard\ImpactStats.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  58:49  error  'Icon' is defined but never used                                               no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\dashboard\QuickActions.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\fix_root_imports.js
+  1:12  error  'require' is not defined  no-undef
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\hooks\useRealTimeData.js
+  51:6  warning  React Hook useEffect has a missing dependency: 'filters'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\Admin.jsx
+  17:10  error  'loadingUsers' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u      no-unused-vars
+  18:10  error  'loadingDonations' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\AnalyticsPage.jsx
+  22:11  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u            no-unused-vars
+  42:9   error  'totalDonations' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\CommunityPage.jsx
+   18:11  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  115:28  error  'eventId' is defined but never used                                                   no-unused-vars
+  119:32  error  'memberId' is defined but never used                                                  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\DashboardPage.jsx
+   6:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u            no-unused-vars
+  53:14  error  'err' is defined but never used                                                          no-unused-vars
+  76:9   error  'totalKg' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\DonationsPage.jsx
+  212:12  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  210 |         {/* CONTENT */}
+  211 |         {error ? (
+> 212 |           <ErrorDisplay error={error} onRetry={handleRefresh} />
+      |            ^^^^^^^^^^^^ This component is created during render
+  213 |         ) : loading ? (
+  214 |           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+  215 |             {[1, 2, 3, 4, 5, 6].map((i) => <LoadingCard key={i} />)}
+
+  73 |   );
+  74 |
+> 75 |   const ErrorDisplay = ({ error, onRetry }) => (
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |     <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |       <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 87 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 88 |   );
+     | ^^^^ The component is created during render here
+  89 |
+  90 |   return (
+  91 |     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">  react-hooks/static-components
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\LandingPage.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\pages\LoginPage.jsx
+  6:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\FEEDRA-FULLSTACK\feedraanti\src\services\donationService.js
+  37:40  error  'userId' is defined but never used  no-unused-vars
+  70:49  error  'userId' is defined but never used  no-unused-vars
+
+Γ£û 34 problems (32 errors, 2 warnings)
+

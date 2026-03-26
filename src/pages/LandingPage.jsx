@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import IntroSplash from "../components/IntroSplash";
-import HeroSlider from "../components/HeroSlider";
+import IntroSplash from "../IntroSplash";
+import HeroSlider from "../HeroSlider";
 import partnerLogo from "../assets/patner.jpeg";
 
 /* ---------------- ANIMATION VARIANTS ---------------- */

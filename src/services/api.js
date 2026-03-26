@@ -17,7 +17,7 @@ API.interceptors.request.use(async (config) => {
   // 2. Fallback to Firebase ID Token (only for initial auth exchange or if no internal token)
   const user = auth.currentUser;
   if (user) {
-    const fhToken = await user.getIdToken();
+    await user.getIdToken();
     // Use a different header or just Authorization?
     // Backend protect middleware expects "Bearer <token>" and verifies with JWT_SECRET.
     // If we send Firebase token here, it will fail `jwt.verify` unless we have a specific endpoint that handles it.
@@ -28,5 +28,23 @@ API.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+// Response Interceptor for Success Logs
+API.interceptors.response.use(
+  (response) => {
+    // Skip logging for frequent polling endpoints to keep console clean
+    const skipLogs = ['/donations/nearby', '/stats/impact'];
+    const isPolling = skipLogs.some(url => response.config.url.includes(url));
+
+    if (!isPolling) {
+      console.log(`✅ Success: [${response.config.method.toUpperCase()}] ${response.config.url}`, response.data);
+    }
+    return response;
+  },
+  (error) => {
+    // Keep error handling as is or enhance if needed
+    return Promise.reject(error);
+  }
+);
 
 export default API;

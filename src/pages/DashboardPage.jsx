@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Zap, RefreshCw, UploadCloud } from "lucide-react";
-import "../components/impactAnimation.css";
-import "../components/PartnerSection.css";
+import "../impactAnimation.css";
+import "../PartnerSection.css";
 import partnerLogo from "../assets/patner.jpeg";
 import { motion } from "framer-motion";
 
@@ -9,21 +9,22 @@ import { useAuth } from "../context/AuthContext";
 import { useRealTimeDonations } from "../hooks/useRealTimeData";
 import { claimDonation } from "../services/donationService";
 
-import CreateDonationModal from "../components/CreateDonationModal";
-import LiveStats from "../components/LiveStats";
-import HostelBiteSection from "../components/HostelBiteSection";
-import DonationPaymentSection from "../components/DonationPaymentSection";
-import HostelMealBooking from "../components/HostelMealBooking";
-import FoodWastageAIStatus from "../components/FoodWastageAIStatus";
+import CreateDonationModal from "../CreateDonationModal";
+import LiveStats from "../LiveStats";
+import HostelBiteSection from "../HostelBiteSection";
+import DonationPaymentSection from "../DonationPaymentSection";
+import HostelMealBooking from "../HostelMealBooking";
+import FoodWastageAIStatus from "../FoodWastageAIStatus";
 import toast from "react-hot-toast";
 
 // New Premium Components
-import HeroSection from "../components/dashboard/HeroSection";
-import QuickActions from "../components/dashboard/QuickActions";
-import ImpactStats from "../components/dashboard/ImpactStats";
-import DonationList from "../components/dashboard/DonationList";
-import Button from "../components/ui/Button";
-import Badge from "../components/ui/Badge";
+import HeroSection from "../dashboard/HeroSection";
+import QuickActions from "../dashboard/QuickActions";
+import ImpactStats from "../dashboard/ImpactStats";
+import DonationList from "../dashboard/DonationList";
+import Button from "../ui/Button";
+import Badge from "../ui/Badge";
+import AgentDashboard from "../components/AgentDashboard";
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -167,6 +168,10 @@ const DashboardPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <HostelMealBooking />
                 <DonationPaymentSection />
+              </div>
+              
+              <div className="mt-10">
+                <AgentDashboard />
               </div>
             </div>
 

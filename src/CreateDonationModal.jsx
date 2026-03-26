@@ -6,9 +6,9 @@ import {
   Tag,
   AlertTriangle,
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 // Removed direct firebase imports
-import { createDonation } from "../services/donationService";
+import { createDonation } from "./services/donationService";
 import toast from "react-hot-toast";
 import "./CreateDonationModal.css";
 
@@ -41,11 +41,6 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
     "Other",
   ];
 
-  const urgencyLevels = [
-    { value: "low", label: "Low Priority" },
-    { value: "medium", label: "Medium Priority" },
-    { value: "high", label: "High Priority" },
-  ];
 
   const commonTags = [
     "Vegetarian",

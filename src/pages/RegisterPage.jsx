@@ -4,7 +4,6 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import API from '../services/api';
-import { sendWelcomeEmail } from '../services/emailService';
 import { Mail, Lock, User, Eye, EyeOff, Building, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -63,7 +62,21 @@ export default function RegisterPage() {
         displayName: formData.name,
       });
 
-      await setDoc(doc(db, 'users', user.uid), {
+      // 1. Sync with backend in background (fire and forget)
+      user.getIdToken().then(token => {
+          API.post('/auth/login', {
+            firebaseToken: token,
+            createIfMissing: true,
+            userType: formData.userType,
+            organization: formData.organization,
+            name: formData.name
+          }).then(({ data }) => {
+              if (data.token) localStorage.setItem('token', data.token);
+          }).catch(apiError => console.error('⚠️ Backend sync warning:', apiError));
+      });
+
+      // 2. Set Firestore record in background (fire and forget)
+      setDoc(doc(db, 'users', user.uid), {
         name: formData.name,
         displayName: formData.name,
         email: formData.email,
@@ -71,28 +84,9 @@ export default function RegisterPage() {
         organization: formData.organization || '',
         createdAt: new Date(),
         emailVerified: false,
-      });
-
-      // Force backend sync to ensure MongoDB user is created
-      try {
-        const token = await user.getIdToken();
-        const { data } = await API.post('/auth/login', {
-          firebaseToken: token,
-          createIfMissing: true // Explicitly allow creation
-        });
-
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          console.log('✅ Backend sync successful & Token stored');
-        }
-      } catch (apiError) {
-        console.error('⚠️ Backend sync warning:', apiError);
-        // Don't block registration success, AuthContext regarding might pick it up
-      }
+      }).catch(fsError => console.error('⚠️ Firestore sync warning:', fsError));
 
       toast.success('Account created! Logging in...');
-      // Email is now handled by AuthContext via Backend flag
-
       navigate('/dashboard');
 
     } catch (error) {

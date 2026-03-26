@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import { ArrowLeft, Utensils, Maximize2, Minimize2, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import TruckAnimation from '../components/TruckAnimation';
-import HostelBiteSection from '../components/HostelBiteSection';
-import HostelMealBooking from '../components/HostelMealBooking';
-import DonationPaymentSection from '../components/DonationPaymentSection';
+import TruckAnimation from '../TruckAnimation';
+import HostelBiteSection from '../HostelBiteSection';
+import HostelMealBooking from '../HostelMealBooking';
+import DonationPaymentSection from '../DonationPaymentSection';
 
 export default function HostelBitePage() {
   const [showEmbedded, setShowEmbedded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const openHostelBite = () => {
-    setShowEmbedded(true);
-  };
 
   const closeEmbedded = () => {
     setShowEmbedded(false);

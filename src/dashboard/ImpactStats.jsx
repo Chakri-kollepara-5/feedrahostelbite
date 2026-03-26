@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { Utensils, Leaf, Scale } from 'lucide-react';
-import { useRealTimeStats } from '../../hooks/useRealTimeData';
+import { useRealTimeStats } from '../hooks/useRealTimeData';
 
 
 const ImpactStats = () => {

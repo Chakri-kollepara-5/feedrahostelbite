@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Brain, Activity, ShieldCheck, Loader2, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
 import { Card } from "./ui/Card";
 import Button from "./ui/Button";
 

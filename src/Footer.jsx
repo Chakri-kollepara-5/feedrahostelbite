@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
-import "../components/PartnerSection.css";
-import partnerLogo from "../assets/patner.jpeg";
+import "./PartnerSection.css";
+import partnerLogo from "./assets/patner.jpeg";
 import { motion } from "framer-motion";
 
 export default function Footer() {
