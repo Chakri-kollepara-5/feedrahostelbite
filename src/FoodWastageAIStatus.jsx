@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Brain, Activity, ShieldCheck, Loader2, Sparkles } from "lucide-react";
 import { Card } from "./ui/Card";
 import Button from "./ui/Button";
+import { motion } from "framer-motion";
 
 const FoodWastageAIStatus = () => {
   const [loading, setLoading] = useState(false);
