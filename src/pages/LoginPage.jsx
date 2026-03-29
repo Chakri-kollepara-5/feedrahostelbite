@@ -58,7 +58,7 @@ export default function LoginPage() {
     }
     setIsSubmitting(true);
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       toast.success("Welcome back!");
       // Navigation is handled by useEffect
     } catch (error) {

@@ -53,7 +53,7 @@ export default function RegisterPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        formData.email,
+        formData.email.trim(),
         formData.password
       );
 
