@@ -23,6 +23,9 @@ import CommunityPage from "./pages/CommunityPage";
 import SettingsPage from "./pages/SettingsPage";
 import HostelBitePage from "./pages/HostelBitePage";
 import PaymentsPage from "./pages/PaymentsPage";
+import AboutPage from "./pages/AboutPage";
+import TermsPage from "./pages/TermsPage";
+import ContactPage from "./pages/ContactPage";
 import AgentDashboard from "./components/AgentDashboard";
 
 // Components
@@ -69,7 +72,7 @@ function AppContent() {
   const [showSplash, setShowSplash] = React.useState(true);
 
   // ❌ Navbar must NOT appear on these routes
-  const hideNavbarRoutes = ["/", "/login", "/register", "/reset-password"];
+  const hideNavbarRoutes = ["/", "/login", "/register", "/reset-password", "/about", "/terms", "/contact"];
 
   const shouldShowNavbar =
     user && !hideNavbarRoutes.includes(location.pathname);
@@ -195,6 +198,11 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+
+        {/* PUBLIC INFO PAGES */}
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" />} />

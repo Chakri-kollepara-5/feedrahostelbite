@@ -228,7 +228,8 @@ const CommunityPage = () => {
                           </div>
                           <div className="ml-3">
                             <h4 className="font-semibold text-gray-900">{member.name}</h4>
-                            <p className="text-sm text-gray-600">{member.userType}</p>
+                            <p className="text-sm font-medium text-gray-500">{member.username}</p>
+                            <p className="text-xs mt-0.5 text-gray-400 capitalize">{member.userType}</p>
                           </div>
                         </div>
 
@@ -343,7 +344,8 @@ const CommunityPage = () => {
 
                         <div className="ml-4">
                           <h4 className="font-semibold">{member.name}</h4>
-                          <div className="flex items-center text-sm text-gray-600">
+                          <p className="text-xs font-medium text-gray-500">{member.username}</p>
+                          <div className="flex items-center text-xs text-gray-400 mt-0.5 capitalize">
                             {getUserTypeIcon(member.userType)}
                             <span className="ml-1">{member.userType}</span>
                           </div>
