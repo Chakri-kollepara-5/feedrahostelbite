@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -25,8 +25,10 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);   // UserProfile-like object
+  const userRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false); // Track active sync to prevent redundancy
+  const isSyncingRef = useRef(false);
 
   /**
    * Centralized Sync Method
@@ -36,13 +38,14 @@ export const AuthProvider = ({ children }) => {
     if (!firebaseUser) return;
     
     // 1. Prevent overlapping syncs
-    if (isSyncing) {
+    if (isSyncingRef.current) {
       console.log('⏳ Sync already in progress, skipping...');
       return;
     }
 
     try {
       setIsSyncing(true);
+      isSyncingRef.current = true;
       console.log('🔄 Syncing user with backend...', metadata);
       
       const idToken = await firebaseUser.getIdToken();
@@ -61,7 +64,9 @@ export const AuthProvider = ({ children }) => {
       }
       
       setUser(data);
+      userRef.current = data;
       setIsSyncing(false);
+      isSyncingRef.current = false;
 
       // Handle welcome email asynchronously (non-blocking)
       if (data.isNewUser) {
@@ -76,6 +81,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("❌ Backend sync error:", err);
       setIsSyncing(false);
+      isSyncingRef.current = false;
       
       if (err.response?.status === 404) {
         toast.error("Account does not exist. Please register first.");
@@ -86,8 +92,9 @@ export const AuthProvider = ({ children }) => {
       }
       
       // If we don't have a user, ensure we clear state
-      if (!user) {
+      if (!userRef.current) {
         setUser(null);
+        userRef.current = null;
         localStorage.removeItem('token');
       }
       
@@ -101,6 +108,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!firebaseUser) {
         setUser(null);
+        userRef.current = null;
         setLoading(false);
         localStorage.removeItem('token');
         return;
@@ -109,7 +117,7 @@ export const AuthProvider = ({ children }) => {
       try {
         // 1. Check if we already have a valid session for this user to avoid redundant calls
         const localToken = localStorage.getItem('token');
-        if (localToken && user && user.firebaseUid === firebaseUser.uid) {
+        if (localToken && userRef.current && userRef.current.firebaseUid === firebaseUser.uid) {
           console.log('⏩ Session already active and matched. Skipping redundant sync.');
           setLoading(false);
           return;
@@ -175,6 +183,7 @@ export const AuthProvider = ({ children }) => {
     await signOut(auth);
     localStorage.removeItem('token');
     setUser(null);
+    userRef.current = null;
   };
 
   const resetPassword = async (email) => {
