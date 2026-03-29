@@ -131,9 +131,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Decorative Silhouette Bottom Graphic (Final Professional Repeating Strategy) */}
+      {/* Decorative Silhouette Bottom Graphic (Final Professional Repeating Strategy - Green Shade) */}
       <div
-        className="absolute bottom-0 left-0 w-full h-[180px] md:h-[240px] pointer-events-none z-50 invert-[30%] sepia-[100%] saturate-[2500%] hue-rotate-[190deg] brightness-[95%] contrast-[110%]"
+        className="absolute bottom-0 left-0 w-full h-[180px] md:h-[240px] pointer-events-none z-50 invert-[52%] sepia-[93%] saturate-[420%] hue-rotate-[113deg] brightness-[96%] contrast-[92%]"
         style={{
           backgroundImage: `url(${footerSilhouette})`,
           backgroundRepeat: 'repeat-x',
