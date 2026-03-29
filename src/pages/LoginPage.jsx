@@ -66,7 +66,7 @@ export default function LoginPage() {
       
       let message = "Invalid credentials";
       if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        message = "Incorrect password or email. Please try again.";
+        message = "Incorrect password. If you registered via Google, please use the 'Continue with Google' button.";
       } else if (error.code === 'auth/user-not-found') {
         message = "No account found with this email.";
       } else if (error.code === 'auth/too-many-requests') {
