@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
-import { Utensils, Leaf, Scale } from 'lucide-react';
 import { useRealTimeStats } from '../hooks/useRealTimeData';
 
 
@@ -12,42 +11,36 @@ const ImpactStats = () => {
 
 
     return (
-        <div className="w-full bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div className="w-full bg-white/95 border border-[#0D2B1B]/10 rounded-3xl p-6 shadow-[0_15px_35px_-5px_rgba(13,43,27,0.08),0_5px_15px_rgba(0,0,0,0.02)] transition-all duration-300">
             <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                <h2 className="text-2xl font-black text-[#0D2B1B] uppercase tracking-tighter mb-1">
                     Community Impact
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs font-semibold text-[#0D2B1B]/75">
                     Live updates of our collective impact.
                 </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
                 <SimpleStat
                     value={totalKg}
                     label="Food Donated"
                     unit="kg"
-                    icon={Scale}
-                    color="text-orange-500"
-                    bg="bg-orange-50"
+                    num="01"
                     delay={0.1}
                 />
                 <SimpleStat
                     value={meals}
                     label="Meals Provided"
                     unit=""
-                    icon={Utensils}
-                    color="text-emerald-500"
-                    bg="bg-emerald-50"
+                    num="02"
                     delay={0.2}
                 />
                 <SimpleStat
                     value={co2}
                     label="CO₂ Saved"
                     unit="kg"
-                    icon={Leaf}
-                    color="text-blue-500"
-                    bg="bg-blue-50"
+                    num="03"
                     delay={0.3}
                 />
             </div>
@@ -55,25 +48,25 @@ const ImpactStats = () => {
     );
 };
 
-const SimpleStat = ({ value, label, unit, icon: Icon, color, bg, delay }) => {
+const SimpleStat = ({ value, label, unit, num, delay }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay, duration: 0.5 }}
-            className="flex flex-col items-center p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+            className="flex flex-col items-center p-6 rounded-2xl bg-white/90 border border-gray-100 shadow-sm hover:scale-[1.02] hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden"
         >
-            <div className={`p-3 rounded-full ${bg} mb-4`}>
-                <Icon className={`w-6 h-6 ${color}`} />
+            <div className="absolute top-4 left-4 font-mono text-xs font-black text-[#0D2B1B]/35">
+                {num}
             </div>
 
-            <div className="text-4xl font-extrabold text-gray-900 mb-1 flex items-baseline">
+            <div className="text-4xl font-black text-[#0D2B1B] mb-1 flex items-baseline mt-4">
                 <Counter value={value} />
-                {unit && <span className="text-lg text-gray-400 font-medium ml-1">{unit}</span>}
+                {unit && <span className="text-sm text-[#0D2B1B]/60 font-black ml-1">{unit}</span>}
             </div>
 
-            <div className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+            <div className="text-[10px] font-black tracking-wider text-[#0D2B1B]/60 uppercase mt-1">
                 {label}
             </div>
         </motion.div>

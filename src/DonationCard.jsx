@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  MapPin,
-  Clock,
-  Package,
-  User,
   AlertTriangle,
-  Zap,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from './ui/Card';
 import Badge from './ui/Badge';
 import Button from './ui/Button';
+import DonationDetailModal from './components/DonationDetailModal';
 
 const DonationCard = ({ donation, onClaim, canClaim }) => {
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
   /* ------------------ HELPERS ------------------ */
   const getStatusVariant = (status) => {
-    switch (status) {
-      case 'available': return 'success';
-      case 'claimed': return 'warning';
-      case 'completed': return 'info';
-      default: return 'secondary';
+    const norm = (status || '').toLowerCase();
+    switch (norm) {
+      case 'available':
+      case 'posted':
+        return 'success';
+      case 'claimed':
+      case 'accepted':
+        return 'warning';
+      case 'completed':
+      case 'delivered':
+        return 'info';
+      case 'picked_up':
+        return 'secondary';
+      case 'cancelled':
+      case 'expired':
+        return 'error';
+      default:
+        return 'secondary';
     }
   };
 
@@ -67,93 +78,125 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
   const isNew = new Date() - createdAtDate < 3600000;
 
   return (
-    <Card className="h-full flex flex-col hover:border-primary-200 group">
-      <CardContent className="flex-grow p-5 space-y-4">
-        {/* Header with Badges */}
-        <div className="relative mb-3">
-          <img
-            src={donation.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
-            alt={donation.foodType}
-            className="w-full h-40 object-cover rounded-xl"
-          />
-          <div className="absolute top-2 right-2 flex gap-1">
-            <Badge variant={getStatusVariant(donation.status)} className="capitalize shadow-sm backdrop-blur-sm bg-white/90">
-              {donation.status}
-            </Badge>
-          </div>
-        </div>
-
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors line-clamp-1 capitalize">
-              {donation.foodType}
-            </h3>
-            <div className="flex gap-2">
-              {isNew && (
-                <Badge variant="success" className="bg-green-50 text-green-700">
-                  <Zap className="h-3 w-3 mr-1" /> NEW
-                </Badge>
-              )}
-              {donation.urgency && (
-                <Badge variant={getUrgencyVariant(donation.urgency)}>
-                  {donation.urgency}
-                </Badge>
-              )}
+    <>
+      <Card 
+        className="h-full flex flex-col group cursor-pointer"
+        onClick={() => setShowDetailModal(true)}
+      >
+        <CardContent className="flex-grow p-5 space-y-4">
+          {/* Header with Badges */}
+          <div className="relative mb-3">
+            <img
+              src={donation.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
+              alt={donation.foodType}
+              className="w-full h-40 object-cover rounded-2xl border border-[#0D2B1B]/15 shadow-sm"
+            />
+            <div className="absolute top-2 right-2 flex gap-1">
+              <Badge variant={getStatusVariant(donation.status)} className="capitalize backdrop-blur-sm">
+                {donation.status}
+              </Badge>
             </div>
           </div>
-          {/* Badge moved to image overlay */}
-        </div>
 
-        {/* Description */}
-        <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-          {donation.description}
-        </p>
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-[#0D2B1B] uppercase tracking-wide group-hover:underline line-clamp-1 capitalize">
+                {donation.foodType}
+              </h3>
+              <div className="flex gap-2">
+                {isNew && (
+                  <Badge variant="success">
+                    NEW
+                  </Badge>
+                )}
+                {donation.urgency && (
+                  <Badge variant={getUrgencyVariant(donation.urgency)}>
+                    {donation.urgency}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
 
-        {/* Meta Grid */}
-        <div className="grid grid-cols-1 gap-2 pt-2 text-sm text-gray-500">
-          <div className="flex items-center">
-            <Package className="h-4 w-4 mr-2 text-gray-400" />
-            <span className="font-medium text-gray-700">{donation.quantity} kg</span>
-          </div>
-          <div className="flex items-center">
-            <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-            <span className="truncate">
-              {typeof donation.location === 'object'
-                ? donation.location?.formattedAddress || 'Unknown Location'
-                : donation.location}
-            </span>
-          </div>
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-2 text-gray-400" />
-            <span className={`font-medium ${expiryStatus.color}`}>
-              {expiryStatus.text}
-            </span>
-          </div>
-          <div className="flex items-center">
-            <User className="h-4 w-4 mr-2 text-gray-400" />
-            <span>{donation.donorName}</span>
-          </div>
-        </div>
-      </CardContent>
+          {/* Description */}
+          <p className="text-xs font-semibold text-[#0D2B1B]/75 line-clamp-2 leading-relaxed">
+            {donation.description}
+          </p>
 
-      {/* Footer Actions */}
-      <CardFooter className="bg-gray-50/50 border-t border-gray-100 p-4 flex justify-between items-center">
-        <span className="text-xs text-gray-400 font-medium">
-          {formatDate(createdAtDate)}
-        </span>
+          {/* Meta Grid */}
+          <div className="grid grid-cols-1 gap-2 pt-2 text-xs text-[#0D2B1B]/80 font-bold">
+            <div className="flex items-center">
+              <span className="w-12 text-[#0D2B1B]/55 uppercase font-mono tracking-wider text-[10px]">Qty:</span>
+              <span>{donation.quantity} kg</span>
+            </div>
+            <div className="flex items-center">
+              <span className="w-12 text-[#0D2B1B]/55 uppercase font-mono tracking-wider text-[10px]">Loc:</span>
+              <span className="truncate">
+                {typeof donation.location === 'object'
+                  ? donation.location?.formattedAddress || 'Unknown Location'
+                  : donation.location}
+              </span>
+            </div>
+            <div className="flex items-center">
+              <span className="w-12 text-[#0D2B1B]/55 uppercase font-mono tracking-wider text-[10px]">Exp:</span>
+              <span className={`font-black ${expiryStatus.color}`}>
+                {expiryStatus.text}
+              </span>
+            </div>
+            <div className="flex items-center">
+              <span className="w-12 text-[#0D2B1B]/55 uppercase font-mono tracking-wider text-[10px]">Donor:</span>
+              <span>{donation.donorName}</span>
+            </div>
+            {donation.freshnessScore && (
+              <div className="flex items-center text-xs mt-1 bg-[#F4F7F5] p-2 rounded-xl border border-gray-200/60 shadow-sm">
+                <span className="flex-1 font-black text-[#0D2B1B] uppercase tracking-wide text-[10px]">
+                  AI Score: {donation.freshnessScore}/100
+                </span>
+                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-current/20 shadow-sm ${
+                  donation.foodCondition === 'Excellent' ? 'bg-[#9FE870] text-[#0D2B1B]' :
+                  donation.foodCondition === 'Good' ? 'bg-sky-200 text-[#0D2B1B]' :
+                  donation.foodCondition === 'High Risk' ? 'bg-amber-300 text-[#0D2B1B]' :
+                  donation.foodCondition === 'Unsafe' ? 'bg-rose-400 text-[#0D2B1B]' :
+                  'bg-yellow-200 text-[#0D2B1B]'
+                }`}>
+                  {donation.foodCondition}
+                </span>
+              </div>
+            )}
+          </div>
+        </CardContent>
 
-        {canClaim && donation.status === 'available' && (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => onClaim(donation.id)}
-            className="shadow-none"
-          >
-            Claim
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+        {/* Footer Actions */}
+        <CardFooter className="bg-[#F4F7F5]/80 border-t border-gray-100 p-4 flex justify-between items-center rounded-b-3xl">
+          <span className="text-[10px] text-[#0D2B1B]/60 font-black uppercase tracking-wider">
+            {formatDate(createdAtDate)}
+          </span>
+
+          {canClaim && (donation.status === 'available' || donation.status === 'POSTED') && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClaim(donation.id);
+              }}
+              className="py-1"
+            >
+              Claim
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+
+      {showDetailModal && (
+        <DonationDetailModal
+          donation={donation}
+          onClose={() => setShowDetailModal(false)}
+          onClaim={onClaim}
+          canClaim={canClaim}
+        />
+      )}
+    </>
   );
 };
 

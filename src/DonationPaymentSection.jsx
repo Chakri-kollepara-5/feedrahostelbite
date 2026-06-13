@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Heart, CheckCircle2, ShieldCheck, Globe, TrendingUp } from "lucide-react";
+// No Lucide icons needed here anymore
 import { Card } from "./ui/Card";
 import Badge from "./ui/Badge";
 import PaymentModal from "./PaymentModal";
@@ -27,9 +27,9 @@ const DonationPaymentSection = () => {
       popular: true
     },
     {
-      amount: 200,
+      amount: 150,
       label: "Champion",
-      impact: "Reduce 50kg waste",
+      impact: "15 meals provided",
       color: "from-blue-400 to-indigo-400",
       bg: "bg-blue-500/10 border-blue-500/30",
       glow: "shadow-[0_0_25px_rgba(96,165,250,0.4)]",
@@ -58,10 +58,10 @@ const DonationPaymentSection = () => {
         <div className="p-6 sm:p-8 flex flex-col z-10 relative">
           <div className="flex items-center justify-between mb-6">
             <Badge variant="success" className="bg-emerald-100 text-emerald-800 border-emerald-200">
-              <Heart className="w-3 h-3 mr-1 fill-current" /> Support Mission
+              Support Mission
             </Badge>
             <div className="flex items-center text-xs text-blue-600 font-medium bg-blue-50 px-3 py-1.5 rounded-full">
-              <Globe className="w-3 h-3 mr-1" /> Global Impact
+              Global Impact
             </div>
           </div>
 
@@ -125,7 +125,6 @@ const DonationPaymentSection = () => {
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5 flex items-center">
-                    <CheckCircle2 className="w-3 h-3 mr-1 text-emerald-500" />
                     {tier.impact}
                   </p>
                 </div>
@@ -134,7 +133,6 @@ const DonationPaymentSection = () => {
           </div>
 
           <div className="flex items-center justify-center gap-1.5 text-center">
-            <ShieldCheck className="w-3.5 h-3.5 text-gray-400" />
             <p className="text-[10px] font-medium text-gray-400">
               Secure • Verified • Tax Deductible
             </p>

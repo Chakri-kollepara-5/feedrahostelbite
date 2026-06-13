@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // Use Auth Context
-import { Eye, EyeOff, ArrowRight, CheckCircle2, Star, Globe, Shield } from "lucide-react";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,20 +9,17 @@ const features = [
   {
     title: "Zero Waste Mission",
     desc: "Join a community dedicated to eliminating food waste through smart redistribution.",
-    icon: Globe,
-    color: "text-green-400"
+    num: "01"
   },
   {
     title: "Real-Time Impact",
     desc: "Track every meal saved and CO₂ prevented with our live dashboard.",
-    icon: Star,
-    color: "text-yellow-400"
+    num: "02"
   },
   {
     title: "Verified & Secure",
     desc: "Government recognized platform ensuring safe and transparent donations.",
-    icon: Shield,
-    color: "text-blue-400"
+    num: "03"
   }
 ];
 
@@ -79,7 +76,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 overflow-hidden font-sans">
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 overflow-hidden font-sans bg-[#F4F7F5]">
 
       {/* 🎥 Full Screen Background */}
       <div className="absolute inset-0 z-0">
@@ -91,35 +88,35 @@ export default function LoginPage() {
           playsInline
           className="w-full h-full object-cover"
         />
-        {/* Gradient Overlay for readability while keeping bg visible */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-green-900/40 backdrop-blur-[2px]" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/60 to-[#0D2B1B]/60 backdrop-blur-[2px]" />
       </div>
 
-      {/* 🌟 Main Glass Card */}
+      {/* 🌟 Main Neo-Brutalist Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-5xl bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px]"
+        className="relative z-10 w-full max-w-5xl bg-white/95 backdrop-blur-md border border-white/20 rounded-[32px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col lg:flex-row min-h-[600px] hover:shadow-[0_35px_80px_-10px_rgba(0,0,0,0.5)] transition-all duration-500"
       >
 
         {/* LEFT SIDE - INFO & FEATURES (Visible on large screens) */}
-        <div className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between bg-gradient-to-br from-white/5 to-transparent border-r border-white/5 relative overflow-hidden">
+        <div className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between bg-gradient-to-br from-[#0D2B1B] to-[#081a10] border-r border-white/10 text-white relative overflow-hidden">
 
           {/* Brand */}
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center">
-                <span className="font-bold text-white text-lg">F</span>
+              <div className="w-8 h-8 rounded-lg bg-[#9FE870] flex items-center justify-center border border-[#0A2215]/20 shadow-sm">
+                <span className="font-black text-[#0D2B1B] text-base">F</span>
               </div>
-              <span className="text-2xl font-bold text-white tracking-wide">FeedraBite</span>
+              <span className="text-2xl font-black text-white tracking-tighter uppercase">FeedraBite.</span>
             </div>
 
-            <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
+            <h2 className="text-4xl font-black text-white leading-none mb-4 uppercase tracking-tighter">
               Empowering <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300">Sustainable Communities</span>
+              <span className="text-[#9FE870]">Sustainable <br />Communities</span>
             </h2>
-            <p className="text-gray-300 text-lg max-w-sm">
+            <p className="text-[#F4F7F5]/85 text-sm font-semibold max-w-sm mt-6 leading-relaxed">
               Connecting surplus food with those in need. Simple, fast, and impactful.
             </p>
           </div>
@@ -133,15 +130,15 @@ export default function LoginPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-md"
+                className="bg-white/5 backdrop-blur-md border border-white/15 rounded-2xl p-4 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)]"
               >
                 <div className="flex items-start gap-4">
-                  <div className={`p-2 rounded-lg bg-white/10 ${features[currentFeature].color}`}>
-                    {React.createElement(features[currentFeature].icon, { className: "w-6 h-6" })}
+                  <div className="p-2 rounded-xl bg-[#9FE870] font-mono text-xs font-black text-[#0D2B1B] flex items-center justify-center min-w-8 h-8">
+                    {features[currentFeature].num}
                   </div>
                   <div>
-                    <h3 className="font-bold text-white mb-1">{features[currentFeature].title}</h3>
-                    <p className="text-sm text-gray-300">{features[currentFeature].desc}</p>
+                    <h3 className="font-black text-[#9FE870] text-sm uppercase tracking-wide mb-0.5">{features[currentFeature].title}</h3>
+                    <p className="text-xs text-[#F4F7F5]/90 font-semibold">{features[currentFeature].desc}</p>
                   </div>
                 </div>
               </motion.div>
@@ -152,59 +149,58 @@ export default function LoginPage() {
               {features.map((_, idx) => (
                 <div
                   key={idx}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentFeature ? 'w-6 bg-green-500' : 'w-1.5 bg-white/30'}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentFeature ? 'w-6 bg-[#9FE870]' : 'w-1.5 bg-white/30'}`}
                 />
               ))}
             </div>
           </div>
 
-          <div className="mt-8 flex items-center gap-2 text-xs text-gray-400">
-            <CheckCircle2 className="w-3 h-3 text-green-500" />
+          <div className="mt-8 flex items-center gap-2 text-xs font-mono text-[#F4F7F5]/50">
             <span>UDYAM-AP-10-0116772 Verified</span>
           </div>
         </div>
 
         {/* RIGHT SIDE - LOGIN FORM */}
-        <div className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-center bg-white/95 backdrop-blur-none lg:bg-white text-left">
+        <div className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-center bg-white text-left">
 
           <div className="max-w-md mx-auto w-full">
             <div className="text-center lg:text-left mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h3>
-              <p className="text-gray-500">Enter your credentials to access your dashboard.</p>
+              <h3 className="text-3xl font-black text-[#0D2B1B] mb-2 uppercase tracking-tighter">Welcome Back</h3>
+              <p className="text-sm font-semibold text-[#0D2B1B]/75">Enter your credentials to access your dashboard.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700 ml-1">Email Address</label>
-                  <div className="relative group">
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#0D2B1B] ml-1">Email Address</label>
+                  <div className="relative">
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name@company.com"
-                      autoComplete="username" // Fixed autocomplete
-                      className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
+                      autoComplete="username"
+                      className="w-full h-12 px-5 bg-white border border-gray-200 rounded-full text-[#0D2B1B] placeholder-[#0D2B1B]/40 focus:outline-none focus:ring-4 focus:ring-[#9FE870]/30 focus:border-[#9FE870] focus:shadow-[0_0_20px_rgba(159,232,112,0.25)] font-semibold transition-all duration-200"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
-                  <div className="relative group">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#0D2B1B] ml-1">Password</label>
+                  <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      autoComplete="current-password" // Fixed autocomplete
-                      className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-500/50 hover:bg-white transition-all duration-300 font-medium shadow-sm group-hover:shadow-md"
+                      autoComplete="current-password"
+                      className="w-full h-12 pl-5 pr-12 bg-white border border-gray-200 rounded-full text-[#0D2B1B] placeholder-[#0D2B1B]/40 focus:outline-none focus:ring-4 focus:ring-[#9FE870]/30 focus:border-[#9FE870] focus:shadow-[0_0_20px_rgba(159,232,112,0.25)] font-semibold transition-all duration-200"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors focus:outline-none p-1"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#0D2B1B] hover:text-[#0D2B1B]/75 transition-colors focus:outline-none p-1"
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -213,29 +209,29 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
-                  <span className="text-sm text-gray-600">Remember me</span>
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" className="w-4 h-4 rounded border border-gray-300 text-[#0D2B1B] focus:ring-[#9FE870]/30 focus:ring-offset-0" />
+                  <span className="text-xs font-bold text-[#0D2B1B]/85">Remember me</span>
                 </label>
-                <Link to="/reset-password" className="text-sm font-medium text-green-600 hover:text-green-700">
+                <Link to="/reset-password" className="text-xs font-black uppercase tracking-wider text-[#0D2B1B] hover:underline">
                   Forgot password?
                 </Link>
               </div>
 
               <button
                 type="submit"
-                disabled={isSubmitting} // Use isSubmitting
-                className="w-full py-3.5 bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-900 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 active:scale-95"
+                disabled={isSubmitting}
+                className="w-full h-12 bg-gradient-to-b from-[#16462d] to-[#0D2B1B] text-[#9FE870] border border-[#0A2215] rounded-full font-black uppercase tracking-wider text-xs shadow-[0_4px_0_0_#05120b,0_8px_16px_rgba(13,43,27,0.15)] hover:from-[#1d5c3b] hover:to-[#123e25] hover:translate-y-[-1px] hover:shadow-[0_5px_0_0_#05120b,0_12px_20px_rgba(13,43,27,0.22)] active:translate-y-[3px] active:shadow-[0_1px_0_0_#05120b,0_4px_8px_rgba(13,43,27,0.1)] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isSubmitting ? "Signing in..." : <>Sign In <ArrowRight className="h-4 w-4" /></>}
+                {isSubmitting ? "Signing in..." : <>Sign In <ArrowRight className="h-4 w-4 stroke-[2.5]" /></>}
               </button>
 
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-200" />
+                  <span className="w-full border-t border-[#0D2B1B]/5" />
                 </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <div className="relative flex justify-center text-xs font-black uppercase tracking-wider">
+                  <span className="bg-white px-3 text-[#0D2B1B]/40">Or continue with</span>
                 </div>
               </div>
 
@@ -250,7 +246,7 @@ export default function LoginPage() {
                     toast.error("Google sign in failed");
                   }
                 }}
-                className="w-full py-3.5 bg-white border-2 border-gray-100 hover:border-gray-200 text-gray-700 rounded-xl font-bold shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-3 active:scale-95"
+                className="w-full h-12 bg-gradient-to-b from-white to-[#f1f5f9] text-[#0D2B1B] border border-[#cbd5e1] rounded-full font-black uppercase tracking-wider text-xs shadow-[0_4px_0_0_#cbd5e1,0_8px_16px_rgba(0,0,0,0.06)] hover:from-[#f8fafc] hover:to-[#e2e8f0] hover:translate-y-[-1px] hover:shadow-[0_5px_0_0_#cbd5e1,0_12px_20px_rgba(0,0,0,0.08)] active:translate-y-[3px] active:shadow-[0_1px_0_0_#cbd5e1,0_4px_8px_rgba(0,0,0,0.04)] transition-all duration-150 flex items-center justify-center gap-3"
               >
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5 w-5" alt="Google" />
                 Continue with Google
@@ -258,16 +254,15 @@ export default function LoginPage() {
 
             </form>
 
-            <div className="mt-8 text-center text-sm text-gray-600">
+            <div className="mt-8 text-center text-xs font-bold text-[#0D2B1B]/75 uppercase tracking-wide">
               Don’t have an account?{" "}
-              <Link to="/register" className="font-bold text-green-600 hover:text-green-700">
+              <Link to="/register" className="font-black text-[#0D2B1B] hover:underline">
                 Sign up for free
               </Link>
             </div>
 
-            <div className="lg:hidden mt-8 pt-6 border-t border-gray-100">
-              <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
-                <Shield className="w-3 h-3" />
+            <div className="lg:hidden mt-8 pt-6 border-t border-[#0D2B1B]/10">
+              <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#0D2B1B]/40">
                 <span>Trusted by 500+ NGOs</span>
               </div>
             </div>

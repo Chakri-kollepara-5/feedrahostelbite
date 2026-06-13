@@ -1,15 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Bell, X, Package, Users, Heart } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
-import { collection, onSnapshot, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { db } from './config/firebase';
 import toast from 'react-hot-toast';
+
+const playNotificationSound = () => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    // First chime note (D5)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, ctx.currentTime);
+    gain1.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start();
+    osc1.stop(ctx.currentTime + 0.4);
+
+    // Second chime note (A5, slightly delayed for a premium notification chime)
+    setTimeout(() => {
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(880, ctx.currentTime);
+      gain2.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start();
+      osc2.stop(ctx.currentTime + 0.6);
+    }, 120);
+  } catch (error) {
+    console.warn("AudioContext chime error:", error);
+  }
+};
 
 const RealTimeNotifications = () => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const prevDonationsRef = useRef({});
 
   // Convert Firestore Timestamp or Date safely
   const formatTime = (value) => {
@@ -26,37 +63,106 @@ const RealTimeNotifications = () => {
 
     const donationsQuery = query(
       collection(db, 'donations'),
-      where('status', '==', 'available'),
       orderBy('createdAt', 'desc'),
-      limit(10)
+      limit(20)
     );
 
+    let isInitial = true;
+
     const unsubscribe = onSnapshot(donationsQuery, (snapshot) => {
+      const initialList = [];
+
       snapshot.docChanges().forEach((change) => {
+        const donation = change.doc.data();
+        const docId = change.doc.id;
+        const prevDoc = prevDonationsRef.current[docId];
+
+        // Store current state in ref
+        prevDonationsRef.current[docId] = donation;
+
         if (change.type === 'added') {
-          const donation = change.doc.data();
+          // If it's a new donation (available) from someone else
+          if (donation.status === 'available' && donation.donorId !== user.uid) {
+            const foodName = donation.title || donation.foodType || 'Food';
+            const locationName = donation.location || 'nearby';
 
-          if (donation.donorId === user.uid) return;
+            const notification = {
+              id: docId,
+              type: 'new_donation',
+              title: 'New Food Donation Available!',
+              message: `${donation.quantity}kg of ${foodName} available in ${locationName}`,
+              timestamp: donation.createdAt?.toDate ? donation.createdAt.toDate() : new Date(donation.createdAt),
+              read: isInitial, // Automatically mark historical items as read
+              data: donation
+            };
 
-          const notification = {
-            id: change.doc.id,
-            type: 'new_donation',
-            title: 'New Food Donation Available!',
-            message: `${donation.quantity}kg of ${donation.foodType} available in ${donation.location}`,
-            timestamp: new Date(),
-            read: false,
-            data: donation
-          };
+            if (isInitial) {
+              initialList.push(notification);
+            } else {
+              setNotifications((prev) => [notification, ...prev.slice(0, 9)]);
+              setUnreadCount((prev) => prev + 1);
+              playNotificationSound();
 
-          setNotifications((prev) => [notification, ...prev.slice(0, 9)]);
-          setUnreadCount((prev) => prev + 1);
+              toast.success(`New ${foodName} donation available!`, {
+                duration: 5000,
+                icon: '🍽️'
+              });
+            }
+          }
+        } else if (change.type === 'modified' && !isInitial) {
+          // Detect status changes for donations owned by this user
+          if (prevDoc && prevDoc.status !== donation.status) {
+            if (donation.donorId === user.uid) {
+              const foodName = donation.title || donation.foodType || 'Food';
+              let titleText = '';
+              let msgText = '';
+              let nType = 'new_donation';
 
-          toast.success(`New ${donation.foodType} donation available!`, {
-            duration: 5000,
-            icon: '🍽️'
-          });
+              const normStatus = (donation.status || '').toLowerCase();
+
+              if (normStatus === 'accepted' || normStatus === 'claimed') {
+                titleText = 'Donation Claimed! 🎉';
+                msgText = `Your donation of ${foodName} has been claimed.`;
+                nType = 'donation_claimed';
+              } else if (normStatus === 'picked_up') {
+                titleText = 'Food Picked Up 🚗';
+                msgText = `Your donation of ${foodName} has been picked up.`;
+                nType = 'donation_claimed';
+              } else if (normStatus === 'delivered' || normStatus === 'completed') {
+                titleText = 'Donation Delivered! ❤️';
+                msgText = `Your donation of ${foodName} has been successfully delivered.`;
+                nType = 'donation_completed';
+              }
+
+              if (titleText) {
+                const notification = {
+                  id: `${docId}-${normStatus}`,
+                  type: nType,
+                  title: titleText,
+                  message: msgText,
+                  timestamp: new Date(),
+                  read: false,
+                  data: donation
+                };
+
+                setNotifications((prev) => [notification, ...prev.slice(0, 9)]);
+                setUnreadCount((prev) => prev + 1);
+                playNotificationSound();
+
+                toast.success(msgText, {
+                  duration: 5000,
+                  icon: normStatus === 'delivered' || normStatus === 'completed' ? '❤️' : '🔔'
+                });
+              }
+            }
+          }
         }
       });
+
+      if (isInitial) {
+        setNotifications(initialList.slice(0, 10));
+        isInitial = false;
+      }
     });
 
     return () => unsubscribe();

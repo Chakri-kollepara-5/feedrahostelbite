@@ -7,42 +7,56 @@ const API = axios.create({
 
 // Attach token automatically
 API.interceptors.request.use(async (config) => {
-  // 1. Try Internal JWT (set after login)
+  if (globalThis.__isOfflineMode) {
+    const offlineError = new Error("Backend offline");
+    offlineError.code = 'ERR_NETWORK';
+    offlineError.__silent = true;
+    throw offlineError;
+  }
+
+  // 1. Try Internal JWT (set after backend login)
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    return config; // Return early if internal token exists
+    return config;
   }
 
-  // 2. Fallback to Firebase ID Token (only for initial auth exchange or if no internal token)
-  const user = auth.currentUser;
-  if (user) {
-    await user.getIdToken();
-    // Use a different header or just Authorization?
-    // Backend protect middleware expects "Bearer <token>" and verifies with JWT_SECRET.
-    // If we send Firebase token here, it will fail `jwt.verify` unless we have a specific endpoint that handles it.
-    // For endpoints that need Firebase token (like /auth/login), we passing it in body usually.
-    // But let's leave this as fallback or remove if not needed.
-    // Actually, if we are calling /auth/login, we don't need Authorization header usually, we send token in body.
-    // So let's just stick to internal token here.
+  // 2. Fallback: use Firebase ID Token directly
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const firebaseToken = await user.getIdToken();
+      config.headers.Authorization = `Bearer ${firebaseToken}`;
+    }
+  } catch (e) {
+    // Silently fail — unauthenticated requests get a 401 from backend
   }
+
   return config;
 });
 
-// Response Interceptor for Success Logs
+// Response Interceptor
 API.interceptors.response.use(
   (response) => {
-    // Skip logging for frequent polling endpoints to keep console clean
+    // Skip logging for frequent polling endpoints
     const skipLogs = ['/donations/nearby', '/stats/impact'];
-    const isPolling = skipLogs.some(url => response.config.url.includes(url));
-
+    const isPolling = skipLogs.some(url => response.config?.url?.includes(url));
     if (!isPolling) {
-      console.log(`✅ Success: [${response.config.method.toUpperCase()}] ${response.config.url}`, response.data);
+      console.log(`✅ [${response.config.method.toUpperCase()}] ${response.config.url}`);
     }
     return response;
   },
   (error) => {
-    // Keep error handling as is or enhance if needed
+    // Only log once when going offline — suppress all subsequent silent errors
+    if (error.__silent) {
+      return Promise.reject(error);
+    }
+    if (!error.response || error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+      if (!globalThis.__isOfflineMode) {
+        globalThis.__isOfflineMode = true;
+        console.info('ℹ️ Backend offline — using local fallback data.');
+      }
+    }
     return Promise.reject(error);
   }
 );

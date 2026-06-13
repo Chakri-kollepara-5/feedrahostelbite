@@ -7,16 +7,16 @@ const Badge = ({
     ...props
 }) => {
     const baseStyles =
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border shadow-sm transition-all duration-150";
 
     const variants = {
-        default: "bg-primary-100 text-primary-800 border border-transparent",
-        secondary: "bg-gray-100 text-gray-800 border border-transparent",
-        outline: "text-gray-800 border border-gray-200",
-        success: "bg-green-100 text-green-800 border border-transparent",
-        warning: "bg-yellow-50 text-yellow-800 border border-yellow-200",
-        error: "bg-red-100 text-red-800 border border-transparent",
-        info: "bg-blue-50 text-blue-700 border border-blue-100",
+        default: "bg-gradient-to-r from-[#b1f284] to-[#9FE870] text-[#0D2B1B] border-[#85cd58]/40",
+        secondary: "bg-white/80 backdrop-blur-sm text-[#0D2B1B] border-gray-200",
+        outline: "bg-transparent text-[#0D2B1B] border-current",
+        success: "bg-gradient-to-r from-emerald-400 to-emerald-500 text-white border-emerald-600/20",
+        warning: "bg-gradient-to-r from-amber-300 to-amber-400 text-[#0D2B1B] border-amber-500/20",
+        error: "bg-gradient-to-r from-rose-400 to-rose-500 text-white border-rose-600/20",
+        info: "bg-gradient-to-r from-sky-400 to-sky-500 text-white border-sky-600/20",
     };
 
     return (

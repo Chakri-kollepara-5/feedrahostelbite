@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -14,8 +14,7 @@ import API from '../services/api';
 import { sendWelcomeEmail } from '../services/emailService';
 import toast from 'react-hot-toast';
 
-// Create Context
-const AuthContext = createContext(undefined);
+import AuthContext from './AuthContextInstance';
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
@@ -29,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false); // Track active sync to prevent redundancy
   const isSyncingRef = useRef(false);
+  const registrationMetadataRef = useRef(null);
 
   /**
    * Centralized Sync Method
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsSyncing(true);
       isSyncingRef.current = true;
-      console.log('🔄 Syncing user with backend...', metadata);
+      console.log('🔄 Syncing user with backend...');
       
       const idToken = await firebaseUser.getIdToken();
       
@@ -79,9 +79,42 @@ export const AuthProvider = ({ children }) => {
 
       return data;
     } catch (err) {
-      console.error("❌ Backend sync error:", err);
       setIsSyncing(false);
       isSyncingRef.current = false;
+      
+      // Fallback for offline / network errors — suppress full stack trace
+      if (err.__silent || !err.response || err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || err.message?.includes('Backend offline')) {
+        console.info('ℹ️ Backend offline — using Firebase session as fallback.');
+        let userType = metadata.userType || 'donor';
+        let name = firebaseUser.displayName || firebaseUser.email?.split('@')[0] || "User";
+        
+        try {
+          const { getDoc, doc } = await import('firebase/firestore');
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            userType = data.userType || userType;
+            name = data.displayName || data.name || name;
+          }
+        } catch (fsErr) {
+          console.warn("⚠️ Failed to fetch user from Firestore fallback:", fsErr);
+        }
+
+        const fallbackUser = {
+          token: "mock-local-token",
+          uid: firebaseUser.uid,
+          id: firebaseUser.uid,
+          firebaseUid: firebaseUser.uid,
+          email: firebaseUser.email,
+          name,
+          userType,
+          isMock: true
+        };
+        localStorage.setItem('token', 'mock-local-token');
+        setUser(fallbackUser);
+        userRef.current = fallbackUser;
+        return fallbackUser;
+      }
       
       if (err.response?.status === 404) {
         toast.error("Account does not exist. Please register first.");
@@ -123,8 +156,10 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        // 2. Perform background sync
-        await syncUser(firebaseUser);
+        // 2. Perform background sync using registration metadata if available
+        const metadata = registrationMetadataRef.current || {};
+        await syncUser(firebaseUser, metadata);
+        registrationMetadataRef.current = null; // Reset metadata ref
         setLoading(false);
       } catch (err) {
         console.warn('⚠️ Background sync failed:', err.message);
@@ -190,6 +225,10 @@ export const AuthProvider = ({ children }) => {
     await sendPasswordResetEmail(auth, email);
   };
 
+  const setRegistrationMetadata = (metadata) => {
+    registrationMetadataRef.current = metadata;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -200,9 +239,16 @@ export const AuthProvider = ({ children }) => {
         logout,
         resetPassword,
         syncUser,
+        setRegistrationMetadata,
         googleLogin: async () => {
           const provider = new GoogleAuthProvider();
-          await signInWithPopup(auth, provider);
+          try {
+            await signInWithPopup(auth, provider);
+          } catch (popupErr) {
+            console.warn("⚠️ Popup sign-in failed/blocked. Trying redirect...", popupErr);
+            const { signInWithRedirect } = await import('firebase/auth');
+            await signInWithRedirect(auth, provider);
+          }
         }
       }}
     >

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import Button from "./ui/Button";
 
 /* ---------------- SLIDES DATA ---------------- */
 
@@ -118,31 +119,32 @@ const HeroSlider = () => {
               transition={{ delay: 1, duration: 0.8 }}
               className="
                 mb-10
-                px-6 py-2
+                px-6 py-2.5
                 rounded-full 
-                bg-white/10 
+                bg-[#0D2B1B]/80
                 backdrop-blur-md 
-                border border-white/20 
-                text-sm md:text-base 
-                text-white/95
-                shadow-2xl
+                border border-[#9FE870]/30
+                text-xs md:text-sm 
+                font-semibold tracking-wider
+                text-[#F4F7F5]
+                shadow-lg shadow-[#9FE870]/10
                 flex items-center gap-2
               "
             >
               <span>Already have an account?</span>
               <button
                 onClick={() => navigate("/login")}
-                className="text-emerald-300 font-bold hover:text-emerald-200 transition-colors"
+                className="text-[#9FE870] font-semibold hover:text-white transition-colors tracking-wider"
               >
                 Login
               </button>
-              <span className="opacity-50">•</span>
+              <span className="opacity-40">•</span>
               <span>New here?</span>
               <button
                 onClick={() => navigate("/register")}
-                className="text-emerald-300 font-bold hover:text-emerald-200 transition-colors"
+                className="text-[#9FE870] font-semibold hover:text-white transition-colors tracking-wider"
               >
-                Create an account
+                Create Account
               </button>
             </motion.div>
 
@@ -157,22 +159,14 @@ const HeroSlider = () => {
                 sm:text-6xl 
                 md:text-7xl 
                 lg:text-8xl 
-                xl:text-[92px]
-                font-black 
+                xl:text-[80px]
+                font-bold 
                 tracking-tight 
                 mb-6 
                 max-w-6xl 
-                leading-[1.05]
-
-                bg-gradient-to-r 
-                from-emerald-300 
-                via-green-300 
-                to-emerald-200 
-
-                bg-clip-text 
-                text-transparent 
-
-                drop-shadow-[0_6px_30px_rgba(16,185,129,0.35)]
+                leading-[1.1]
+                text-[#9FE870]
+                drop-shadow-[0_4px_10px_rgba(159,232,112,0.2)]
               "
             >
               {words.map((word, i) => (
@@ -193,12 +187,12 @@ const HeroSlider = () => {
               initial="hidden"
               animate="visible"
               className="
-                text-2xl
-                sm:text-3xl
-                md:text-4xl
-                lg:text-5xl
+                text-xl
+                sm:text-2xl
+                md:text-3xl
+                lg:text-4xl
 
-                font-extrabold
+                font-semibold
                 tracking-tight
                 leading-[1.1]
 
@@ -214,46 +208,23 @@ const HeroSlider = () => {
             </motion.p>
 
             {/* CTA BUTTONS */}
-            <div className="mt-12 flex flex-col sm:flex-row gap-4">
-
-              <button
+            <div className="mt-12 flex flex-col sm:flex-row gap-6">
+              <Button
+                variant="secondary"
                 onClick={() => navigate("/login")}
-                className="
-                  px-10 py-4 
-                  rounded-2xl 
-                  bg-gradient-to-r from-green-600 to-emerald-600 
-                  text-white 
-                  font-semibold 
-                  hover:scale-[1.04] 
-                  hover:shadow-2xl 
-                  transition-all duration-300 
-                  shadow-lg shadow-green-900/30
-                "
+                className="px-10 py-4 text-sm"
               >
                 Login
-              </button>
+              </Button>
 
-              <button
+              <Button
+                variant="outline"
                 onClick={() => navigate("/register")}
-                className="
-                  px-10 py-4 
-                  rounded-2xl 
-                  bg-white/95 
-                  backdrop-blur 
-                  text-green-700 
-                  font-semibold 
-                  hover:bg-white 
-                  transition 
-                  shadow-lg 
-                  hover:scale-[1.04]
-                "
+                className="px-10 py-4 text-sm bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0D2B1B] shadow-lg shadow-black/10"
               >
-                Create Free Account
-              </button>
-
+                Create Account
+              </Button>
             </div>
-
-
           </div>
         </motion.div>
       </AnimatePresence>

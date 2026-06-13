@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Brain, Activity, ShieldCheck, Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Card } from "./ui/Card";
 import Button from "./ui/Button";
 import { motion } from "framer-motion";
@@ -57,8 +57,7 @@ const FoodWastageAIStatus = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 className="flex items-center justify-center md:justify-start gap-2 mb-2"
               >
-                <Sparkles className="h-5 w-5 text-green-300 animate-pulse" />
-                <span className="text-green-300 font-medium tracking-wider text-xs uppercase">Powered by Feedra AI</span>
+                <span className="text-green-300 font-medium tracking-wider text-xs uppercase font-mono bg-white/10 px-2 py-0.5 rounded">Core Engine</span>
               </motion.div>
 
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
@@ -77,7 +76,6 @@ const FoodWastageAIStatus = () => {
                   size="lg"
                   className="bg-white text-green-900 hover:bg-green-50 border-none shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                 >
-                  <Activity className="mr-2 h-5 w-5" />
                   Activate AI Engine
                 </Button>
               )}
@@ -95,8 +93,7 @@ const FoodWastageAIStatus = () => {
                   animate={{ scale: 1, opacity: 1 }}
                   className="flex items-center gap-3 bg-green-500/20 px-6 py-3 rounded-xl border border-green-400/50 text-green-100"
                 >
-                  <ShieldCheck className="h-6 w-6 text-green-400" />
-                  <span className="font-bold tracking-wide">AI ACTIVE & MONITORING</span>
+                  <span className="font-mono font-bold tracking-wide text-xs">AI ACTIVE & MONITORING</span>
                 </motion.div>
               )}
             </div>
@@ -118,33 +115,37 @@ const FoodWastageAIStatus = () => {
             </div>
           </div>
 
-          {/* Right Visual */}
+          {/* Right Visual - Monospace Terminal Log console */}
           <div className="relative">
-            <div className="absolute inset-0 bg-green-500/30 blur-[60px] rounded-full"></div>
+            <div className="absolute inset-0 bg-green-500/10 blur-[50px] rounded-full"></div>
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10 bg-gradient-to-b from-white/10 to-transparent p-1 rounded-2xl backdrop-blur-sm border border-white/20"
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10 bg-gradient-to-b from-white/10 to-transparent p-1 rounded-2xl backdrop-blur-sm border border-white/10"
             >
-              <div className="bg-black/40 rounded-xl p-8 backdrop-blur-md">
-                <Brain className={`w-32 h-32 md:w-40 md:h-40 ${aiActive ? 'text-green-400 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]' : 'text-gray-400'}`} />
+              <div className="bg-black/85 rounded-xl p-5 backdrop-blur-md w-64 md:w-72 font-mono text-xs text-green-400 space-y-2 select-none h-44 overflow-hidden border border-white/5 shadow-2xl">
+                <div className="flex items-center gap-1.5 border-b border-white/10 pb-2 mb-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80"></span>
+                  <span className="text-[10px] text-gray-500 ml-1">feedra-ai-core</span>
+                </div>
+                {aiActive ? (
+                  <div className="space-y-1">
+                    <p className="text-gray-500">&gt; feedra-ai --monitor</p>
+                    <p className="text-green-300 animate-pulse">[status] engine online</p>
+                    <p className="text-emerald-400">[predict] surplus in Sector 4</p>
+                    <p className="text-emerald-400">[optimize] routing active</p>
+                    <p className="text-gray-500">[logs] streaming telemetry...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <p className="text-gray-500">&gt; feedra-ai --status</p>
+                    <p className="text-yellow-500">[status] offline</p>
+                    <p className="text-gray-500">[info] click button to initialize predictive modeling</p>
+                  </div>
+                )}
               </div>
-
-              {/* Connecting Dots Animation */}
-              {aiActive && (
-                <>
-                  <motion.div
-                    animate={{ opacity: [0, 1, 0], scale: [1, 1.5, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -top-2 -right-2 w-4 h-4 bg-green-400 rounded-full shadow-lg shadow-green-400"
-                  />
-                  <motion.div
-                    animate={{ opacity: [0, 1, 0], scale: [1, 1.5, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                    className="absolute -bottom-2 -left-2 w-4 h-4 bg-green-400 rounded-full shadow-lg shadow-green-400"
-                  />
-                </>
-              )}
             </motion.div>
           </div>
 

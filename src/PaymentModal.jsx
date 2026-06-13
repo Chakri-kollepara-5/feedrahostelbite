@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CreditCard, Shield, CheckCircle } from 'lucide-react';
+import { X, CreditCard } from 'lucide-react';
 
 const PaymentModal = ({
   isOpen,
@@ -13,17 +13,26 @@ const PaymentModal = ({
 
   if (!isOpen) return null;
 
-  // Razorpay payment links
+  // Razorpay payment links based on amount and type
   const getPaymentLink = () => {
+    if (amount === 30) return 'https://rzp.io/rzp/5T4xEeUQ';
+    if (amount === 50) return 'https://rzp.io/rzp/1lW7jjan';
+    if (amount === 80) return 'https://rzp.io/rzp/zFTcubE';
+    if (amount === 100) return 'https://rzp.io/rzp/PvkJaDnm';
+    if (amount === 150) return 'https://rzp.io/rzp/2Beb8oM';
+
     switch (paymentType) {
       case 'breakfast':
-        return 'https://rzp.io/rzp/1oUmcRy3'; // ₹30
+        return 'https://rzp.io/rzp/5T4xEeUQ'; // ₹30
       case 'lunch':
-        return 'https://rzp.io/rzp/bsVwLwNS'; // ₹80
       case 'dinner':
-        return 'https://rzp.io/rzp/bsVwLwNS'; // ₹80
+        return 'https://rzp.io/rzp/zFTcubE'; // ₹80
+      case 'donation':
       default:
-        return 'https://rzp.io/rzp/1oUmcRy3'; // default donation
+        if (amount === 50) return 'https://rzp.io/rzp/1lW7jjan';
+        if (amount === 100) return 'https://rzp.io/rzp/PvkJaDnm';
+        if (amount === 150) return 'https://rzp.io/rzp/2Beb8oM';
+        return 'https://rzp.io/rzp/1lW7jjan'; // fallback default
     }
   };
 
@@ -38,15 +47,6 @@ const PaymentModal = ({
     }, 1000);
   };
 
-  const getMealEmoji = () => {
-    switch (paymentType) {
-      case 'breakfast': return '🌅';
-      case 'lunch': return '☀️';
-      case 'dinner': return '🌙';
-      default: return '💝';
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
@@ -57,8 +57,8 @@ const PaymentModal = ({
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                  <span className="text-2xl">{getMealEmoji()}</span>
+                <div className="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm font-mono text-xs font-bold uppercase tracking-wider">
+                  {paymentType}
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">{title}</h3>
@@ -91,29 +91,17 @@ const PaymentModal = ({
           </div>
 
           {/* Features */}
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center space-x-3 text-sm text-gray-600">
-              <Shield className="h-5 w-5 text-green-600" />
-              <span>Secure payment powered by Razorpay</span>
-            </div>
-
-            <div className="flex items-center space-x-3 text-sm text-gray-600">
-              <CreditCard className="h-5 w-5 text-blue-600" />
-              <span>UPI, Cards, Net Banking supported</span>
-            </div>
-
-            <div className="flex items-center space-x-3 text-sm text-gray-600">
-              <CheckCircle className="h-5 w-5 text-purple-600" />
-              <span>Instant confirmation & receipt</span>
-            </div>
+          <div className="space-y-3 mb-6 text-sm text-gray-600 border-y border-gray-100 py-4 font-mono">
+            <div>• Secure payment powered by Razorpay</div>
+            <div>• UPI, Cards, Net Banking supported</div>
+            <div>• Instant confirmation & receipt</div>
           </div>
 
           {/* Payment Button */}
           <button
             onClick={handlePayment}
             disabled={loading}
-           className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 transform hover:scale-105 cursor-default"
-
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 transform hover:scale-105 cursor-default"
           >
             {loading ? (
               <>
@@ -123,27 +111,23 @@ const PaymentModal = ({
             ) : (
               <>
                 <CreditCard className="h-5 w-5" />
-                <span>Pay ₹{amount} Now 💳</span>
+                <span>Pay ₹{amount} Now</span>
               </>
             )}
           </button>
 
           {/* Security */}
           <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-xs text-blue-700 text-center">
-              🔒 Your payment is processed securely by Razorpay. We don't store your payment details.
+            <p className="text-xs text-blue-700 text-center font-medium">
+              Your payment is processed securely by Razorpay. We do not store your payment details.
             </p>
           </div>
 
           {/* GOV Verification */}
           <div className="mt-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-sm">🏛️</span>
-              <div className="text-center">
-                <div className="text-xs font-semibold text-green-900">Government Verified Platform</div>
-                <div className="text-xs text-green-700">Udyam No: UDYAM-AP-10-0116772</div>
-              </div>
-              <span className="text-sm">✅</span>
+            <div className="text-center">
+              <div className="text-xs font-bold text-green-900 uppercase tracking-wide">Government Verified Platform</div>
+              <div className="text-[10px] text-green-700 font-mono mt-0.5">UDYAM-AP-10-0116772</div>
             </div>
           </div>
 

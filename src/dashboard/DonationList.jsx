@@ -47,13 +47,13 @@ const DonationList = ({
                 transition={{ duration: 0.5 }}
                 className="flex items-center justify-between mb-6"
             >
-                <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+                <h2 className="text-2xl font-black uppercase tracking-tighter text-[#0D2B1B] flex items-center gap-3">
                     {title}
                     {safeDonations.length > 0 && (
                         <motion.span
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                            className="bg-gradient-to-r from-[#b7f58b] to-[#9FE870] text-[#0D2B1B] border border-[#84cf57]/40 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-sm"
                         >
                             {safeDonations.length}
                         </motion.span>
@@ -71,9 +71,9 @@ const DonationList = ({
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center bg-white/5 rounded-2xl p-10 border border-white/10 border-dashed"
+                    className="text-center bg-white/95 rounded-3xl p-10 border border-dashed border-[#0D2B1B]/15 shadow-sm"
                 >
-                    <p className="text-gray-400 mb-4 text-sm">{emptyMessage || "No donations found."}</p>
+                    <p className="text-[#0D2B1B]/70 font-semibold mb-6 text-sm">{emptyMessage || "No donations found."}</p>
                     {showCreateButton && (
                         <Button onClick={onCreate} variant="primary" size="md">
                             Create First Donation

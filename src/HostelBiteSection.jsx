@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Clock,
-  MapPin,
-  Star,
-  Users,
-  Utensils,
-  ExternalLink,
   RefreshCw,
   X,
   Maximize2,
-  Minimize2
+  Minimize2,
+  Utensils
 } from 'lucide-react';
 
 const HostelBiteSection = () => {
@@ -122,14 +117,14 @@ const HostelBiteSection = () => {
                   )}
                 </div>
 
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-xs font-mono">
                   <div className="flex items-center text-gray-600">
-                    <Clock className="h-4 w-4 mr-2 text-green-600" />
-                    <span>{status.time}</span>
+                    <span className="w-12 text-gray-400 uppercase font-semibold">Time:</span>
+                    <span className="text-gray-850 font-sans font-medium">{status.time}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
-                    <Users className="h-4 w-4 mr-2 text-blue-600" />
-                    <span className="font-medium">{status.count} meals available</span>
+                    <span className="w-12 text-gray-400 uppercase font-semibold">Qty:</span>
+                    <span className="text-gray-850 font-sans font-medium">{status.count} meals available</span>
                   </div>
                 </div>
               </div>
@@ -147,10 +142,9 @@ const HostelBiteSection = () => {
               <div
                 key={i}
                 onClick={openHostelBite}
-                className="text-center p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg hover:from-green-50 hover:to-emerald-50 transition-all duration-300 hover:scale-105 transform cursor-pointer group"
+                className="text-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg hover:from-green-50 hover:to-emerald-50 transition-all duration-300 hover:scale-105 transform cursor-pointer group"
               >
-                <div className="text-2xl mb-2 group-hover:scale-110 transform transition-transform">{f.icon}</div>
-                <h5 className="font-medium text-gray-900 text-sm">{f.title}</h5>
+                <h5 className="font-semibold text-gray-900 text-sm">{f.title}</h5>
                 <p className="text-xs text-gray-600 mt-1">{f.desc}</p>
               </div>
             ))}
@@ -162,8 +156,7 @@ const HostelBiteSection = () => {
           {/* Location Info */}
           <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200 hover:from-blue-100 hover:to-cyan-100 transition-all duration-300">
             <div className="flex items-center space-x-2 text-blue-800">
-              <MapPin className="h-4 w-4" />
-              <span className="text-sm font-medium">Available at participating hostels across India 🇮🇳</span>
+              <span className="text-sm font-medium">Available at participating hostels across India</span>
             </div>
           </div>
         </div>

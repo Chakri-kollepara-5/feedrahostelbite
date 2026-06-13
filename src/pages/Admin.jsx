@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc
-} from "firebase/firestore";
-
+import API from "../services/api";
 import AnalyticsPage from "./AnalyticsPage";
 
 const AdminPage = () => {
@@ -43,8 +36,15 @@ const AdminPage = () => {
   /* ---------------- FETCH USERS ---------------- */
   const fetchUsers = async () => {
     try {
-      const snap = await getDocs(collection(db, "users"));
-      const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const { data } = await API.get("/admin/users");
+      const list = data.map((u) => ({
+        id: u._id || u.id,
+        displayName: u.name || u.displayName,
+        email: u.email,
+        userType: u.role || u.userType,
+        verified: u.isVerified || u.verified,
+        ...u
+      }));
       setUsers(list);
     } catch (err) {
       console.error("Error loading users:", err);
@@ -56,8 +56,14 @@ const AdminPage = () => {
   /* ---------------- FETCH DONATIONS ---------------- */
   const fetchDonations = async () => {
     try {
-      const snap = await getDocs(collection(db, "donations"));
-      const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const { data } = await API.get("/donations/nearby");
+      const list = data.map((d) => ({
+        id: d._id || d.id,
+        description: d.description,
+        contactInfo: d.contactInfo || "No Contact Info",
+        createdAt: d.createdAt,
+        ...d
+      }));
       setDonations(list);
     } catch (err) {
       console.error("Error loading donations:", err);
@@ -81,14 +87,11 @@ const AdminPage = () => {
     }
 
     try {
-      await updateDoc(doc(db, "users", uid), {
-        verified: true,
-      });
-
+      await API.patch(`/admin/verify-ngo/${uid}`);
       fetchUsers();
     } catch (error) {
       console.error("Error verifying user:", error);
-      alert("Verification failed. Check Firestore rules.");
+      alert("Verification failed. Check server logs.");
     }
   };
 
@@ -125,7 +128,7 @@ const AdminPage = () => {
       </p>
 
       {/* METRIC CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
           { label: "Total Users", value: totalUsers, color: "from-green-500 to-emerald-600" },
           { label: "Verified Users", value: verifiedUsers, color: "from-blue-500 to-indigo-600" },
@@ -138,6 +141,43 @@ const AdminPage = () => {
           >
             <p className="text-lg font-semibold">{item.label}</p>
             <h2 className="text-4xl font-bold mt-1">{item.value}</h2>
+          </div>
+        ))}
+      </div>
+
+      {/* AI ANALYTICS CARDS */}
+      <h2 className="text-2xl font-bold mb-3 flex items-center">
+        <span className="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-2">🤖</span> AI Donation Health
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        {[
+          { 
+            label: "Avg Freshness Score", 
+            value: donations.length > 0 ? Math.round(donations.reduce((acc, d) => acc + (d.freshnessScore || 80), 0) / donations.length) + "/100" : "N/A", 
+            color: "from-indigo-500 to-blue-600" 
+          },
+          { 
+            label: "High Risk Donations", 
+            value: donations.filter(d => d.foodCondition === 'High Risk' || d.foodCondition === 'Unsafe').length, 
+            color: "from-red-500 to-rose-600" 
+          },
+          { 
+            label: "Total Safe Meals", 
+            value: donations.filter(d => (d.freshnessScore || 80) >= 60).reduce((acc, d) => acc + (d.quantity || 0) * 3, 0), // approx 3 meals per kg 
+            color: "from-teal-500 to-emerald-600" 
+          },
+          { 
+            label: "AI Analyzed Items", 
+            value: donations.filter(d => d.freshnessScore != null).length, 
+            color: "from-cyan-500 to-blue-600" 
+          },
+        ].map((item, index) => (
+          <div
+            key={`ai-${index}`}
+            className={`p-6 rounded-xl shadow-md text-white bg-gradient-to-br ${item.color}`}
+          >
+            <p className="text-sm font-medium opacity-90 uppercase tracking-wider">{item.label}</p>
+            <h2 className="text-3xl font-bold mt-2">{item.value}</h2>
           </div>
         ))}
       </div>
@@ -200,8 +240,8 @@ const AdminPage = () => {
                 <td className="p-4">{d.description}</td>
                 <td className="p-4">{d.contactInfo}</td>
                 <td className="p-4">
-                  {d.createdAt?.toDate
-                    ? d.createdAt.toDate().toDateString()
+                  {d.createdAt
+                    ? new Date(d.createdAt).toDateString()
                     : "—"}
                 </td>
               </tr>

@@ -73,7 +73,8 @@ const LiveStats = () => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       {statItems.map((stat, index) => {
-        const progressPercentage = Math.min(100, (stat.value / 1000) * 100);
+        const safeValue = stat.value || 0;
+        const progressPercentage = Math.min(100, (safeValue / 1000) * 100);
 
         return (
           <div
@@ -88,7 +89,7 @@ const LiveStats = () => {
 
                 <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
                   <p className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
-                    {stat.value?.toLocaleString()}
+                    {safeValue.toLocaleString()}
                   </p>
                   <span className="text-xs text-green-600 font-medium bg-green-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full whitespace-nowrap">
                     {stat.change}

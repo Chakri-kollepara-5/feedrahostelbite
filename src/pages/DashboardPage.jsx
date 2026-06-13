@@ -91,29 +91,29 @@ const DashboardPage = () => {
       >
 
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-gray-200/60 transition-all duration-300">
+        <header className="bg-gradient-to-br from-[#b7f58b] via-[#9FE870] to-[#86db59] border border-[#84cf57]/40 rounded-3xl p-6 md:p-8 shadow-[0_20px_40px_-10px_rgba(13,43,27,0.15)] flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-[#0D2B1B]">
                 Dashboard
               </h1>
-              <Badge variant="success" className="animate-pulse shadow-sm">
+              <Badge variant="success" className="animate-pulse">
                 <Zap className="h-3 w-3 mr-1 fill-current" />
                 LIVE
               </Badge>
             </div>
-            <p className="text-gray-500 font-medium text-sm">
-              Welcome back, <span className="text-gray-900 font-semibold">{user?.displayName || "Food Saver"}</span>
+            <p className="text-[#0D2B1B]/80 font-bold text-sm">
+              Welcome back, <span className="text-[#0D2B1B] font-black">{user?.displayName || "Food Saver"}</span>
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={handleRefresh} size="sm" className="hidden sm:flex bg-white hover:bg-gray-50">
-              <RefreshCw className="h-4 w-4 mr-2" />
+            <Button variant="outline" onClick={handleRefresh} size="sm" className="hidden sm:flex">
+              <RefreshCw className="h-4 w-4 mr-2 stroke-[2.5]" />
               Sync Data
             </Button>
-            <Button variant="primary" onClick={() => setShowCreateModal(true)} size="sm" className="shadow-lg shadow-primary-500/20">
-              <UploadCloud className="h-4 w-4 mr-2" />
+            <Button variant="primary" onClick={() => setShowCreateModal(true)} size="sm">
+              <UploadCloud className="h-4 w-4 mr-2 stroke-[2.5]" />
               New Donation
             </Button>
           </div>

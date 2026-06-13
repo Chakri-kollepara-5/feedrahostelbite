@@ -6,20 +6,23 @@ export default {
       colors: {
         // Semantic Token System
         primary: {
-          50: "#ecfdf5",
-          100: "#d1fae5",
-          200: "#a7f3d0",
-          300: "#6ee7b7",
-          400: "#34d399",
-          500: "#10b981", // Brand Match
-          600: "#059669", // Action Default
-          700: "#047857", // Action Hover
-          800: "#065f46",
-          900: "#064e3b",
-          950: "#022c22",
-          DEFAULT: "#059669",
-          foreground: "#ffffff",
+          50: "#F4F7F5",   // wiseBg
+          100: "#9FE870",  // wiseLime
+          200: "#8DE05C",
+          300: "#7BD848",
+          400: "#69D034",
+          500: "#9FE870",  // Brand Match
+          600: "#0D2B1B",  // Action Default (Forest Green)
+          700: "#0A2215",  // Action Hover (Darker Forest Green)
+          800: "#081A10",
+          900: "#05110A",
+          950: "#030905",
+          DEFAULT: "#0D2B1B",
+          foreground: "#9FE870",
         },
+        wiseLime: "#9FE870",
+        wiseForest: "#0D2B1B",
+        wiseBg: "#F4F7F5",
         // Premium Grays (Cool/Slate mix)
         gray: {
           50: "#f8fafc", // Surface Field

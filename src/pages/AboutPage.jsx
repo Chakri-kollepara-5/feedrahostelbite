@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Heart, Shield, Users } from 'lucide-react';
 
 const AboutPage = () => {
   return (
@@ -20,20 +19,14 @@ const AboutPage = () => {
 
         <div className="grid md:grid-cols-2 gap-12 mb-20">
           <div className="space-y-4">
-            <div className="flex items-center gap-3 text-green-700">
-              <Target size={24} />
-              <h2 className="text-2xl font-bold">Our Mission</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-green-500 pb-2 w-fit">Our Mission</h2>
             <p className="text-gray-600 leading-relaxed">
               To eliminate hunger and reduce food waste by creating a seamless, transparent, and technology-driven ecosystem that connects donors with those in need in real-time.
             </p>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-3 text-blue-700">
-              <Heart size={24} />
-              <h2 className="text-2xl font-bold">Our Vision</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 border-b-2 border-blue-500 pb-2 w-fit">Our Vision</h2>
             <p className="text-gray-600 leading-relaxed">
               A zero-hunger future where every surplus meal is valued and every hungry person is reached, powered by community collaboration and smart logistics.
             </p>
@@ -44,14 +37,14 @@ const AboutPage = () => {
           <h2 className="text-2xl font-bold text-gray-900 text-center">Why Choose Feedra?</h2>
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="flex gap-4">
-              <div className="mt-1 text-green-600"><Shield size={20} /></div>
+              <div className="text-xl font-mono font-bold text-green-600">01</div>
               <div>
                 <h3 className="font-bold text-gray-800">Verified Network</h3>
                 <p className="text-sm text-gray-600">Every NGO and donor on our platform is strictly verified for safety and accountability.</p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="mt-1 text-blue-600"><Users size={20} /></div>
+              <div className="text-xl font-mono font-bold text-blue-600">02</div>
               <div>
                 <h3 className="font-bold text-gray-800">Community Driven</h3>
                 <p className="text-sm text-gray-600">Built for the community, by the community. Connecting neighbors to help neighbors.</p>
