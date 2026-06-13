@@ -214,19 +214,14 @@ const AdminPage = () => {
         {/* METRICS CONTROL GRID */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Total Users", value: totalUsers, icon: Users, color: "text-blue-500 bg-blue-500/5 border-blue-500/10 hover:border-blue-500/30" },
-            { label: "Verified Users", value: verifiedUsers, icon: CheckCircle2, color: "text-emerald-500 bg-emerald-500/5 border-emerald-500/10 hover:border-emerald-500/30" },
-            { label: "Active Donors", value: totalDonors, icon: Gift, color: "text-orange-500 bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30" },
-            { label: "Registered NGOs", value: totalNGOs, icon: Shield, color: "text-purple-500 bg-purple-500/5 border-purple-500/10 hover:border-purple-500/30" },
+            { label: "Total Users", value: totalUsers, color: "text-blue-500 bg-blue-500/5 border-blue-500/10 hover:border-blue-500/30" },
+            { label: "Verified Users", value: verifiedUsers, color: "text-emerald-500 bg-emerald-500/5 border-emerald-500/10 hover:border-emerald-500/30" },
+            { label: "Active Donors", value: totalDonors, color: "text-orange-500 bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30" },
+            { label: "Registered NGOs", value: totalNGOs, color: "text-purple-500 bg-purple-500/5 border-purple-500/10 hover:border-purple-500/30" },
           ].map((item, index) => (
-            <Card key={index} className={`p-5 bg-white/70 backdrop-blur-xl border border-gray-200/50 shadow-sm flex items-center justify-between hover:-translate-y-1 hover:shadow-md transition-all duration-300 ${item.color}`}>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{item.label}</p>
-                <h3 className="text-2xl font-bold mt-1 text-[#0D2B1B] tracking-tight">{item.value}</h3>
-              </div>
-              <div className="p-3 rounded-2xl border border-gray-100 bg-gray-50 text-[#0D2B1B] shadow-sm">
-                <item.icon className="h-5 w-5" />
-              </div>
+            <Card key={index} className={`p-5 bg-white/70 backdrop-blur-xl border border-gray-200/50 shadow-sm flex flex-col justify-center hover:-translate-y-1 hover:shadow-md transition-all duration-300 ${item.color}`}>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{item.label}</p>
+              <h3 className="text-3xl font-bold mt-1.5 text-[#0D2B1B] tracking-tight">{item.value}</h3>
             </Card>
           ))}
         </div>
@@ -237,17 +232,7 @@ const AdminPage = () => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform duration-700"></div>
           
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-2.5">
-              <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <h3 className="font-bold tracking-tight text-base text-[#0D2B1B]">AI Platform Diagnosis</h3>
-            </div>
-            
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100/50 text-indigo-700 text-[10px] font-bold">
-              <TrendingUp className="h-3 w-3" />
-              Active Metrics
-            </div>
+            <h3 className="font-bold tracking-tight text-base text-[#0D2B1B]">Platform Diagnosis & Performance</h3>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -300,20 +285,19 @@ const AdminPage = () => {
         {/* FUTURISTIC TAB SWITCHERS */}
         <div className="bg-white/60 backdrop-blur-md p-1.5 rounded-2xl w-max mb-8 border border-gray-200/50 shadow-sm flex items-center">
           {[
-            { id: "users", label: "Users Registry", icon: Users },
-            { id: "donations", label: "Donation Feed", icon: Database },
-            { id: "analytics", label: "Live System Charts", icon: Shield },
+            { id: "users", label: "Users Registry" },
+            { id: "donations", label: "Donation Feed" },
+            { id: "analytics", label: "Live System Charts" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center ${
                 activeTab === tab.id
                   ? "bg-[#0D2B1B] text-white shadow-md shadow-[#0D2B1B]/10 hover:bg-[#0D2B1B]/95"
                   : "text-gray-500 hover:text-[#0D2B1B] hover:bg-gray-100/50"
               }`}
             >
-              <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
             </button>
           ))}
@@ -375,13 +359,13 @@ const AdminPage = () => {
                           </td>
                           <td className="p-5">
                             {u.userType === "ngo" && !u.verified ? (
-                              <button
+                              <Button
+                                size="sm"
                                 onClick={() => verifyUser(u.id)}
-                                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold transition-all shadow-md shadow-emerald-600/10 flex items-center gap-1"
+                                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold transition-all shadow-md shadow-emerald-600/10"
                               >
-                                <span>Verify NGO</span>
-                                <ArrowUpRight className="h-3.5 w-3.5" />
-                              </button>
+                                Verify NGO
+                              </Button>
                             ) : u.userType === "ngo" && u.verified ? (
                               <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-bold rounded-full inline-flex items-center gap-1 shadow-sm">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
