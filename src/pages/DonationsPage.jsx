@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, MapPin, Clock, Zap, RefreshCw, AlertCircle, Brain } from 'lucide-react';
+import { Plus, Search, Filter, MapPin, Clock, Zap, RefreshCw, AlertCircle, Brain, Activity } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useRealTimeDonations } from '../hooks/useRealTimeData';
 import { claimDonation } from '../services/donationService';
@@ -130,8 +130,8 @@ export default function DonationsPage() {
               size="sm"
               className={!showSmartRadar ? "animate-pulse shadow-[0_0_15px_rgba(159,232,112,0.4)] border-[#84cf57] text-[#0D2B1B] hover:shadow-[0_0_20px_rgba(159,232,112,0.6)]" : ""}
             >
-              <Brain className="h-4 w-4 mr-2 stroke-[2.5]" />
-              {showSmartRadar ? "Hide AI Radar" : "AI Smart Radar"}
+              <Activity className="h-4 w-4 mr-2 stroke-[2.5]" />
+              {showSmartRadar ? "Hide Analytics" : "Impact Analytics"}
             </Button>
 
             <Button variant="outline" onClick={handleRefresh} size="sm">

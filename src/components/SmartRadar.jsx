@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Sparkles, Brain, ShieldAlert, Leaf, Flame, HelpCircle, ArrowRight, Activity, Users } from 'lucide-react';
+import { ShieldAlert, Leaf, ArrowRight, Activity, Archive, Apple, Shield, Heart, Utensils, Cloud, Droplet, Compass, Map } from 'lucide-react';
 import Badge from '../ui/Badge';
 
 export default function SmartRadar({ donations = [] }) {
@@ -69,41 +69,51 @@ export default function SmartRadar({ donations = [] }) {
     return analytics.urgentItems.map(item => {
       let targetNGO = "Local Shelter / Community Kitchen";
       let strategy = "Direct distribution to residents";
-      let icon = "🥗";
+      let iconType = "default";
 
       const fType = (item.foodType || '').toLowerCase();
       if (fType.includes('grain') || fType.includes('rice') || fType.includes('wheat') || fType.includes('grocery')) {
         targetNGO = "Food Bank India / Goonj";
         strategy = "Bulk storage & dry ration packaging";
-        icon = "🌾";
+        iconType = "grains";
       } else if (fType.includes('vegetable') || fType.includes('fruit')) {
         targetNGO = "Robin Hood Army / Akshaya Patra";
         strategy = "Immediate daily cooking & raw distribution";
-        icon = "🍎";
+        iconType = "veggies";
       } else if (fType.includes('dairy') || fType.includes('milk') || fType.includes('cheese')) {
         targetNGO = "Local Orphanages / Mother Teresa Home";
         strategy = "Cold-chain quick consumption (milk/curd)";
-        icon = "🥛";
+        iconType = "dairy";
       } else if (fType.includes('prepared') || fType.includes('meal') || fType.includes('curry')) {
         targetNGO = "Slum Feeding Programs / Night Shelters";
         strategy = "Instant hot serving within 2 hours";
-        icon = "🍲";
+        iconType = "meals";
       }
 
       return {
         ...item,
         targetNGO,
         strategy,
-        icon
+        iconType
       };
     });
   }, [analytics.urgentItems]);
 
+  const renderIcon = (type) => {
+    switch (type) {
+      case 'grains': return <Archive className="h-4.5 w-4.5 text-amber-600" />;
+      case 'veggies': return <Apple className="h-4.5 w-4.5 text-green-600" />;
+      case 'dairy': return <Shield className="h-4.5 w-4.5 text-blue-500" />;
+      case 'meals': return <Heart className="h-4.5 w-4.5 text-red-500" />;
+      default: return <Utensils className="h-4.5 w-4.5 text-gray-500" />;
+    }
+  };
+
   if (analytics.activeCount === 0) {
     return (
       <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-[#0D2B1B]/10 shadow-[0_20px_50px_rgba(13,43,27,0.05)] text-center">
-        <Brain className="h-12 w-12 text-indigo-500 mx-auto mb-3 animate-pulse" />
-        <h3 className="text-lg font-bold text-[#0D2B1B] mb-1">Smart Radar Standby</h3>
+        <Compass className="h-12 w-12 text-indigo-500 mx-auto mb-3 animate-pulse" />
+        <h3 className="text-lg font-bold text-[#0D2B1B] mb-1">Impact Analytics Standby</h3>
         <p className="text-sm font-semibold text-[#0D2B1B]/60 max-w-md mx-auto">
           Active food donations are required to compile live freshness metrics, matching algorithms, and environmental analytics.
         </p>
@@ -115,7 +125,7 @@ export default function SmartRadar({ donations = [] }) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
       
       {/* 1. FRESHNESS SAFETY TIERS */}
-      <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 border border-[#0D2B1B]/10 shadow-[0_15px_30px_rgba(13,43,27,0.04)] flex flex-col justify-between">
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-300">
         <div>
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 rounded-xl bg-green-50 text-green-600">
@@ -127,7 +137,7 @@ export default function SmartRadar({ donations = [] }) {
           </div>
           
           <p className="text-xs font-semibold text-gray-500 mb-6">
-            Live assessment of active food items categorized by AI Freshness Scores.
+            Live assessment of active food items categorized by analyzed safety scores.
           </p>
 
           <div className="space-y-4">
@@ -196,14 +206,14 @@ export default function SmartRadar({ donations = [] }) {
       </div>
 
       {/* 2. SMART LOGISTICS MATCHING */}
-      <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 border border-[#0D2B1B]/10 shadow-[0_15px_30px_rgba(13,43,27,0.04)] flex flex-col justify-between">
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-[0_15px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-300">
         <div>
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-              <Brain className="h-5 w-5 stroke-[2.5]" />
+              <Map className="h-5 w-5 stroke-[2.5]" />
             </div>
             <h3 className="font-black text-sm uppercase tracking-wider text-[#0D2B1B]">
-              AI Logistics Recommendations
+              Logistics Recommendations
             </h3>
           </div>
 
@@ -220,10 +230,12 @@ export default function SmartRadar({ donations = [] }) {
               </div>
             ) : (
               recommendations.map((rec, index) => (
-                <div key={rec.id} className="p-3 bg-gradient-to-br from-indigo-50/50 to-indigo-100/30 rounded-2xl border border-indigo-100/50 flex flex-col gap-2">
+                <div key={rec.id} className="p-3 bg-gradient-to-br from-indigo-50/30 to-indigo-100/10 rounded-2xl border border-indigo-100/30 flex flex-col gap-2">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">{rec.icon}</span>
+                      <div className="p-1 rounded-md bg-white border border-gray-100 flex items-center justify-center">
+                        {renderIcon(rec.iconType)}
+                      </div>
                       <span className="text-xs font-black text-[#0D2B1B] truncate max-w-[120px]">{rec.title}</span>
                     </div>
                     <Badge variant="error" className="text-[9px] tracking-wide font-black">
@@ -248,7 +260,7 @@ export default function SmartRadar({ donations = [] }) {
         </div>
 
         <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#0D2B1B]/70 bg-[#F4F7F5] -mx-6 -mb-6 p-4 rounded-b-3xl">
-          <span>AI Logistics Mode:</span>
+          <span>Logistics matching:</span>
           <span className="font-black text-indigo-700">Proximity & Freshness Match</span>
         </div>
       </div>
@@ -276,7 +288,9 @@ export default function SmartRadar({ donations = [] }) {
             {/* Meals Saved */}
             <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-500/10 text-green-400 rounded-lg text-xs">🍽️</div>
+                <div className="p-2 bg-green-500/10 text-green-400 rounded-lg flex items-center justify-center">
+                  <Utensils className="h-4.5 w-4.5" />
+                </div>
                 <div>
                   <p className="text-[10px] font-black uppercase text-slate-400">Meals Provided</p>
                   <p className="text-base font-black tracking-tight text-white">{analytics.meals} servings</p>
@@ -287,7 +301,9 @@ export default function SmartRadar({ donations = [] }) {
             {/* CO2 Offset */}
             <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg text-xs">☁️</div>
+                <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg flex items-center justify-center">
+                  <Cloud className="h-4.5 w-4.5" />
+                </div>
                 <div>
                   <p className="text-[10px] font-black uppercase text-slate-400">CO₂ Prevention</p>
                   <p className="text-base font-black tracking-tight text-white">{analytics.co2Offset} kg CO₂e</p>
@@ -298,7 +314,9 @@ export default function SmartRadar({ donations = [] }) {
             {/* Water Offset */}
             <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-cyan-500/10 text-cyan-400 rounded-lg text-xs">💧</div>
+                <div className="p-2 bg-cyan-500/10 text-cyan-400 rounded-lg flex items-center justify-center">
+                  <Droplet className="h-4.5 w-4.5" />
+                </div>
                 <div>
                   <p className="text-[10px] font-black uppercase text-slate-400">Water Conservation</p>
                   <p className="text-base font-black tracking-tight text-white">{analytics.waterSaved.toLocaleString()} Liters</p>
