@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
+import CurvedText from "./components/CurvedText";
 
 /* ---------------- SLIDES DATA ---------------- */
 
@@ -228,6 +229,11 @@ const HeroSlider = () => {
           </div>
         </motion.div>
       </AnimatePresence>
+
+      {/* FLOATING CURVED TEXT STAMP */}
+      <div className="absolute bottom-20 right-8 hidden lg:flex items-center justify-center z-30 p-1 bg-black/20 border border-white/5 rounded-full backdrop-blur-sm shadow-xl">
+        <CurvedText />
+      </div>
 
       {/* DOT NAVIGATION */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
