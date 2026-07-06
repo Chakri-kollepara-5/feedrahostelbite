@@ -221,12 +221,25 @@ function AppContent() {
   );
 }
 
+/* ---------------- SCROLL TO TOP ON ROUTE CHANGE ---------------- */
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 /* ---------------- ROOT ---------------- */
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <AppContent />
       </Router>
     </AuthProvider>
