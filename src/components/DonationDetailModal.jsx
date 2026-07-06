@@ -108,7 +108,7 @@ const DonationDetailModal = ({ donation, onClose, onClaim, canClaim }) => {
         <div className="w-full md:w-5/12 bg-gray-50 relative flex flex-col border-r border-gray-100">
           <div className="relative h-64 md:h-full min-h-[260px] overflow-hidden">
             <img
-              src={donation.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
+              src={donation.image || (donation.images && donation.images[0]) || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
               alt={donation.foodType}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
             />

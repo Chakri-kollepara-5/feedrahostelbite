@@ -87,7 +87,7 @@ const DonationCard = ({ donation, onClaim, canClaim }) => {
           {/* Header with Badges */}
           <div className="relative mb-3">
             <img
-              src={donation.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
+              src={donation.image || (donation.images && donation.images[0]) || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
               alt={donation.foodType}
               className="w-full h-40 object-cover rounded-2xl border border-[#0D2B1B]/15 shadow-sm"
             />
