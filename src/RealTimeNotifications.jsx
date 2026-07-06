@@ -103,9 +103,63 @@ const RealTimeNotifications = () => {
               setUnreadCount((prev) => prev + 1);
               playNotificationSound();
 
-              toast.success(`New ${foodName} donation available!`, {
-                duration: 5000,
-                icon: '🍽️'
+              toast.custom((t) => (
+                <div
+                  className={`${
+                    t.visible ? 'animate-enter' : 'animate-leave'
+                  } max-w-md w-full bg-white shadow-2xl rounded-3xl pointer-events-auto flex border border-[#0D2B1B]/15 overflow-hidden font-sans text-[#0D2B1B]`}
+                  style={{
+                    animation: t.visible ? 'fade-in 0.3s ease-out' : 'fade-out 0.2s ease-in'
+                  }}
+                >
+                  <div className="flex-1 w-0 p-4">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 pt-0.5">
+                        <img
+                          className="h-12 w-12 rounded-2xl object-cover border border-[#0D2B1B]/10"
+                          src={donation.image || (donation.images && donation.images[0]) || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2574&auto=format&fit=crop"}
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-black uppercase tracking-tight text-[#0D2B1B]">
+                            New Donation!
+                          </p>
+                          <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                            donation.urgency === 'high' ? 'bg-red-50 text-red-700 border border-red-200' :
+                            donation.urgency === 'medium' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                            'bg-green-50 text-green-700 border border-green-200'
+                          }`}>
+                            {donation.urgency || 'medium'}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm font-bold text-[#0D2B1B]/70">
+                          {donation.quantity}kg of {foodName} in {locationName}
+                        </p>
+                        {donation.freshnessScore && (
+                          <div className="mt-2 flex items-center gap-1.5 bg-gradient-to-r from-indigo-50 to-indigo-100/50 border border-indigo-200/50 px-2 py-1 rounded-xl w-fit">
+                            <span className="text-[10px] font-black text-indigo-700 uppercase tracking-wider">AI Freshness:</span>
+                            <span className="text-xs font-black text-indigo-800">{donation.freshnessScore}/100</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex border-l border-gray-100">
+                    <button
+                      onClick={() => {
+                        toast.dismiss(t.id);
+                      }}
+                      className="w-full border border-transparent rounded-none rounded-r-3xl p-4 flex items-center justify-center text-sm font-black text-green-600 hover:text-green-700 focus:outline-none"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              ), {
+                duration: 6000,
+                position: 'top-right'
               });
             }
           }
