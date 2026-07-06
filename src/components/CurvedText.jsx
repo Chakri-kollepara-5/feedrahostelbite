@@ -4,7 +4,7 @@ export default function CurvedText() {
   const text = "SURPLUS FOOD RESCUE • LIVE SHARING SYSTEM • ZERO WASTE • ";
   
   return (
-    <div className="relative w-28 h-28 md:w-32 md:h-32 flex items-center justify-center pointer-events-none select-none">
+    <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 flex items-center justify-center pointer-events-none select-none">
       {/* Center glowing indicator */}
       <div className="absolute w-2 h-2 bg-[#9FE870] rounded-full shadow-[0_0_12px_#9FE870] animate-pulse"></div>
 

@@ -231,7 +231,7 @@ const HeroSlider = () => {
       </AnimatePresence>
 
       {/* FLOATING CURVED TEXT STAMP */}
-      <div className="absolute bottom-20 right-8 hidden lg:flex items-center justify-center z-30 p-1 bg-black/20 border border-white/5 rounded-full backdrop-blur-sm shadow-xl">
+      <div className="absolute bottom-24 sm:bottom-20 right-4 sm:right-8 flex items-center justify-center z-30 p-0.5 bg-black/20 border border-white/5 rounded-full backdrop-blur-sm shadow-xl">
         <CurvedText />
       </div>
 

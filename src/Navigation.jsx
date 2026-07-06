@@ -69,7 +69,8 @@ const Navigation = () => {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 rounded-full border border-white/20 dark:border-[#0D2B1B]/15 bg-white/70 dark:bg-[#0D2B1B]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(13,43,27,0.06)] px-6 py-2 transition-colors duration-300"
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 border border-white/20 dark:border-[#0D2B1B]/15 bg-white/70 dark:bg-[#0D2B1B]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(13,43,27,0.06)] px-5 py-2 transition-all duration-300
+        ${isMobileMenuOpen ? 'rounded-[24px]' : 'rounded-full'}`}
     >
       <div className="flex items-center justify-between h-12">
 
