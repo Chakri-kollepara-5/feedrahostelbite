@@ -70,19 +70,48 @@ const CreateDonationModal = ({ onClose, onSuccess }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("Image size should be less than 5MB");
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("Image size should be less than 10MB");
         return;
       }
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(p => ({
-          ...p,
-          imagePreview: reader.result,
-          imageBase64: reader.result,
-          mimeType: file.type
-        }));
-        setAiResult(null); // Reset AI result if image changes
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const max_size = 400; // max dimensions for lightweight base64 storage
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Get lightweight compressed base64 data URL
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+          setFormData(p => ({
+            ...p,
+            imagePreview: reader.result, // keep high-res preview for modal
+            imageBase64: compressedBase64, // store small version for DB/Firestore sync
+            mimeType: 'image/jpeg'
+          }));
+          setAiResult(null); // Reset AI result if image changes
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
