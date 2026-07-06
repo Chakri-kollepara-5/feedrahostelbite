@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, MapPin, Clock, Zap, RefreshCw, AlertCircle } from 'lucide-react';
+import { Plus, Search, Filter, MapPin, Clock, Zap, RefreshCw, AlertCircle, Brain } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useRealTimeDonations } from '../hooks/useRealTimeData';
 import { claimDonation } from '../services/donationService';
 import DonationCard from '../DonationCard';
 import LiveStats from '../LiveStats';
 import CreateDonationModal from '../CreateDonationModal';
+import SmartRadar from '../components/SmartRadar';
 import toast from 'react-hot-toast';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
@@ -43,6 +44,7 @@ const ErrorDisplay = ({ error, onRetry }) => (
 export default function DonationsPage() {
   const { user } = useAuth();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSmartRadar, setShowSmartRadar] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -122,6 +124,16 @@ export default function DonationsPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button 
+              variant={showSmartRadar ? "primary" : "outline"} 
+              onClick={() => setShowSmartRadar(!showSmartRadar)} 
+              size="sm"
+              className={!showSmartRadar ? "animate-pulse shadow-[0_0_15px_rgba(159,232,112,0.4)] border-[#84cf57] text-[#0D2B1B] hover:shadow-[0_0_20px_rgba(159,232,112,0.6)]" : ""}
+            >
+              <Brain className="h-4 w-4 mr-2 stroke-[2.5]" />
+              {showSmartRadar ? "Hide AI Radar" : "AI Smart Radar"}
+            </Button>
+
             <Button variant="outline" onClick={handleRefresh} size="sm">
               <RefreshCw className="h-4 w-4 mr-2 stroke-[2.5]" />
               Refresh
@@ -144,6 +156,13 @@ export default function DonationsPage() {
         <div className="mb-8">
           <LiveStats />
         </div>
+
+        {/* AI SMART RADAR */}
+        {showSmartRadar && (
+          <div className="mb-8">
+            <SmartRadar donations={donations} />
+          </div>
+        )}
 
         {/* FILTERS */}
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 border border-[#0D2B1B]/10 shadow-[0_15px_35px_-5px_rgba(13,43,27,0.08),0_5px_15px_rgba(0,0,0,0.02)] mb-8">
