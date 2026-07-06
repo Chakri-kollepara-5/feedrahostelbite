@@ -87,126 +87,128 @@ function AppContent() {
       {/* ✅ NAVBAR (ONLY FOR APP PAGES) */}
       {shouldShowNavbar && <Navigation />}
 
-      <Routes>
-        {/* 🔥 LANDING PAGE (NO AUTH GUARD) */}
-        <Route path="/" element={<LandingPage />} />
+      <div className={shouldShowNavbar ? "pt-24 pb-6" : ""}>
+        <Routes>
+          {/* 🔥 LANDING PAGE (NO AUTH GUARD) */}
+          <Route path="/" element={<LandingPage />} />
 
-        {/* AUTH PAGES */}
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <LoginPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <RegisterPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <PublicRoute>
-              <ResetPasswordPage />
-            </PublicRoute>
-          }
-        />
+          {/* AUTH PAGES */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPasswordPage />
+              </PublicRoute>
+            }
+          />
 
-        {/* PROTECTED APP PAGES */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
+          {/* PROTECTED APP PAGES */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/donations"
-          element={
-            <ProtectedRoute>
-              <DonationsPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/donations"
+            element={
+              <ProtectedRoute>
+                <DonationsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/agent-dashboard"
-          element={
-            <ProtectedRoute>
-              <AgentDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/agent-dashboard"
+            element={
+              <ProtectedRoute>
+                <AgentDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/analytics"
-          element={
-            <ProtectedRoute>
-              <AnalyticsPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <AnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/community"
-          element={
-            <ProtectedRoute>
-              <CommunityPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/community"
+            element={
+              <ProtectedRoute>
+                <CommunityPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/hostelbite"
-          element={
-            <ProtectedRoute>
-              <HostelBitePage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/hostelbite"
+            element={
+              <ProtectedRoute>
+                <HostelBitePage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/payments"
-          element={
-            <ProtectedRoute>
-              <PaymentsPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute>
+                <PaymentsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* PUBLIC INFO PAGES */}
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+          {/* PUBLIC INFO PAGES */}
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
-        {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          {/* FALLBACK */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
 
       {/* TOASTS */}
       <Toaster position="top-right" />
